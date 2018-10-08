@@ -63,9 +63,10 @@
       {% for pr in prs %}
         <div class="row">
           <div class="col">
-            <div class="vertical-strip pl-2 pt-2 pb-2 mt-3 bg-white rounded shadow-sm">
+
+            <div class="pl-2 pt-2 pb-2 mt-3 bg-white rounded shadow-sm pr-card" data-pr-number="{{pr.number}}" data-updated-at="{{pr.updated_at}}">
               <div class="lead"><a href="{{pr.html_url}}" target="_blank" class="no-color-link">{{pr.title}}</a> <mark>#{{pr.number}}</mark></div>
-  
+              
               <div class="row pt-1">
                 <div class="col-auto">Author: {{pr.user.login}}</div>
                 <div class="col-auto">Date: {{pr.created_at|datetime}}</div>

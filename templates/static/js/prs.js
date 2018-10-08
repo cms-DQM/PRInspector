@@ -39,6 +39,9 @@ function loadComments(pr_number, comments_url)
                     commentsPreloader.innerHTML = hiddenCommentsCount+ " hidden comments"
                 else
                     commentsPreloader.style.display = "none"
+
+                localStorage.setItem('viewd_at_' + pr_number, new Date().toISOString())
+                setBlueBarIfVisited()
             }
             else
             {
@@ -70,14 +73,14 @@ function createCommentsList(comments)
         <div class="pt-3 border-bottom">
             <img class="rounded pull-left" style="width: 32px; height: 32px;" src="` + comment.user.avatar_url + `">
             <div class="media-body small text-muted pl-5">
-            <div class="row">
-                <div class="col-auto"><strong class="text-gray-dark">` + comment.user.login + `</strong></div>
-                <div class="col-auto">` + date + `</div>
-                <div class="col text-right2"><a href="` + comment.html_url + `" target="_blank" class="no-color-link">View on Github</a></div>
-            </div>
-            <div class="row word-break mr-2">
-                <div class="col"><p>` + body + `</p></div>
-            </div>      
+                <div class="row">
+                    <div class="col-auto"><strong class="text-gray-dark">` + comment.user.login + `</strong></div>
+                    <div class="col-auto">` + date + `</div>
+                    <div class="col text-right2"><a href="` + comment.html_url + `" target="_blank" class="no-color-link">View on Github</a></div>
+                </div>
+                <div class="row word-break mr-2">
+                    <div class="col"><p>` + body + `</p></div>
+                </div>      
             </div>
         </div>`
     });
@@ -99,4 +102,28 @@ function formatDate(date)
       second = date.getSeconds().toString(),
       formatedSecond = (second.length === 1) ? ("0" + second) : second;
     return year + "-" + formatedMonth + "-" + formatedDay + " " + formatedHour + ':' + formatedMinute + ':' + formatedSecond;
+}
+
+window.onload = function(e){ 
+    setBlueBarIfVisited();
+}
+
+function setBlueBarIfVisited()
+{
+    pr_cards = document.querySelectorAll(".pr-card")
+    pr_cards.forEach(function(card) 
+    {
+        var pr_number = card.dataset.prNumber
+        var updated_at = new Date(card.dataset.updatedAt);
+        var viewd_at = new Date(localStorage.getItem('viewd_at_' + pr_number));
+        
+        if(updated_at > viewd_at)
+        {
+            card.classList.add("vertical-strip")
+        }
+        else
+        {
+            card.classList.remove("vertical-strip")
+        }
+    });
 }

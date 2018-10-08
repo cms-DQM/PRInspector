@@ -18,11 +18,3 @@ body {
 .word-break {
   word-wrap: break-word;
 }
-
-/* a > .pr-card {
-  border-left: 2px solid #4d6bf1;
-}
-
-a:visited > .pr-card {
-  border-left: 2px solid #f14d4d;
-} */
