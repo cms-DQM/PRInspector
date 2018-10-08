@@ -1,5 +1,5 @@
-from flask import Flask, render_template
-from views.prs import *
+from flask import Flask, render_template, request
+from views.prs import get_prs_view
 from datetime import datetime
 import time
 
@@ -9,7 +9,8 @@ app = Flask(__name__,
 
 @app.route('/')
 def index():
-    return get_prs_view()
+    code = request.args.get('code')
+    return get_prs_view(code)
 
 @app.template_filter('datetime')
 def format_date(date_string):

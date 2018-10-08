@@ -52,7 +52,12 @@
   <main role="main" class="container pt-4 pb-4">
     <h4><a href="https://github.com/cms-sw/cmssw/pulls?utf8=✓&q=is%3Apr+is%3Aopen+label%3Adqm-pending" target="_blank"
         class="no-color-link">Pending and rejected PRs <b>{{prs|length}}</b></a></h4>
-          
+    {% if access_token == None or access_token == '' %}
+      <div class="alert alert-primary mb-0" role="alert">
+        You haven't authorized this app to use Github. Please <a href="https://github.com/login/oauth/authorize?client_id=90704daa46bd69de5beb&redirect_uri={{url_for(request.endpoint, _external=True)}}" class="alert-link">login</a> in order for this app to post comments on your behalf.
+      </div>
+    {%endif%}
+
     <div class="list">
 
       {% for pr in prs %}
@@ -61,13 +66,13 @@
             <div class="vertical-strip pl-2 pt-2 pb-2 mt-3 bg-white rounded shadow-sm">
               <div class="lead"><a href="{{pr.html_url}}" target="_blank" class="no-color-link">{{pr.title}}</a> <mark>#{{pr.number}}</mark></div>
   
-              <div class="row pt-2">
+              <div class="row pt-1">
                 <div class="col-auto">Author: {{pr.user.login}}</div>
                 <div class="col-auto">Date: {{pr.created_at|datetime}}</div>
                 <div class="col-auto">{{pr.comments}} comments. Last: {{pr.updated_at|datetime}}</div>
               </div>
   
-              <div class="row pt-2">
+              <div class="row">
                 <div class="col">
                   {% for label in pr.labels %}
                     <span class="badge" style="background-color:#{{label.color}}">{{label.name}}</span>
@@ -75,7 +80,7 @@
                 </div>
               </div>
   
-              <div class="row pt-2">
+              <div class="row pt-1">
                 <div class="col-auto text-success">Tag collector: Tested <i class="fa fa-check"></i></div>
                 <div class="col-auto text-info">Probably Online</div>
                 <div class="col-auto text-success">Subsystem is in the title </div>
@@ -86,12 +91,12 @@
 
                 <div class="pt-3 border-bottom">
                   <img class="rounded pull-left" style="width: 32px; height: 32px;" src="{{pr.user.avatar_url}}">
-                  <div class="media-body small text-muted">
+                  <div class="media-body small text-muted pl-5">
                     <div class="row">
                       <div class="col-auto"><strong class="text-gray-dark">{{pr.user.login}}</strong></div>
                       <div class="col-auto">{{pr.created_at|datetime}}</div>
                     </div>
-                    <div class="row">
+                    <div class="row word-break mr-2">
                       <div class="col"><p>{{pr.body}}</p></div>
                     </div>      
                   </div>
@@ -103,7 +108,7 @@
 
               </div>
   
-              <div class="row pt-2 pr-3">
+              <div class="row pt-1 pr-3">
                 <div class="col">
                   <div class="dropdown pull-right">
                     <a class="" href="#" id="dropdown-menu-button" data-toggle="dropdown" aria-haspopup="true"
@@ -116,7 +121,7 @@
                       <a class="dropdown-item" href="#">+1</a>
                     </div>
                   </div>
-                  <div class="pull-right"><a class="pr-3" target="_blank" href="{{pr.comments_url}}">Code</a></div>
+                  <div class="pull-right"><a class="pr-3" target="_blank" href="{{pr.html_url}}/files">Code</a></div>
                   <div class="pull-right"><a class="pr-3" data-toggle="collapse" href="#collapse-comments-{{pr.number}}" onclick="loadComments({{pr.number}}, '{{pr.comments_url}}');">Comments</a></div>
                 </div>
               </div>

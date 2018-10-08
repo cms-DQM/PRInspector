@@ -69,13 +69,13 @@ function createCommentsList(comments)
         result += `
         <div class="pt-3 border-bottom">
             <img class="rounded pull-left" style="width: 32px; height: 32px;" src="` + comment.user.avatar_url + `">
-            <div class="media-body small text-muted">
+            <div class="media-body small text-muted pl-5">
             <div class="row">
                 <div class="col-auto"><strong class="text-gray-dark">` + comment.user.login + `</strong></div>
                 <div class="col-auto">` + date + `</div>
                 <div class="col text-right2"><a href="` + comment.html_url + `" target="_blank" class="no-color-link">View on Github</a></div>
             </div>
-            <div class="row">
+            <div class="row word-break mr-2">
                 <div class="col"><p>` + body + `</p></div>
             </div>      
             </div>
