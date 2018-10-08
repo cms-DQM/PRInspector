@@ -115,11 +115,11 @@
                     <a class="" href="#" id="dropdown-menu-button" data-toggle="dropdown" aria-haspopup="true"
                       aria-expanded="false">Actions</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown-menu-button">
-                      <a class="dropdown-item" href="#">Run Tests</a>
-                      <a class="dropdown-item" href="#">Ask for introduction</a>
-                      <a class="dropdown-item disabled" href="#">Ask to put subsystem name in the title</a>
-                      <a class="dropdown-item" href="#">-1</a>
-                      <a class="dropdown-item" href="#">+1</a>
+                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#" onclick="actionRunTests('{{pr.comments_url}}', '{{access_token}}')">Run Tests</a>
+                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#" onclick="actionAskForIntroduction('{{pr.comments_url}}'), '{{access_token}}'">Ask for introduction</a>
+                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#" onclick="actionAskForSubsystemName('{{pr.comments_url}}'), '{{access_token}}'">Ask to put subsystem name in the title</a>
+                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#" onclick="actionReject('{{pr.comments_url}}'), '{{access_token}}'">-1</a>
+                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#" onclick="actionSign('{{pr.comments_url}}'), '{{access_token}}'">+1</a>
                     </div>
                   </div>
                   <div class="pull-right"><a class="pr-3" target="_blank" href="{{pr.html_url}}/files">Code</a></div>
@@ -206,7 +206,7 @@
 
           </div>
         </div> -->
-    </div>
+      </div>
     </div><!-- /.list -->
 
   </main><!-- /.container -->

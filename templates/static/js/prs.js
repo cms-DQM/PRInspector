@@ -104,7 +104,35 @@ function formatDate(date)
     return year + "-" + formatedMonth + "-" + formatedDay + " " + formatedHour + ':' + formatedMinute + ':' + formatedSecond;
 }
 
-window.onload = function(e){ 
+// Action handlers
+function actionRunTests(url, access_token)
+{
+    console.log(access_token)
+}
+
+function actionAskForIntroduction(url, access_token)
+{
+    console.log(url)
+}
+
+function actionAskForSubsystemName(url, access_token)
+{
+    console.log(url)
+}
+
+function actionReject(url, access_token)
+{
+    console.log(url, access_token)
+}
+
+function actionSign(url, access_token)
+{
+    console.log(url)
+}
+
+// Set blue bar if visited initially
+window.onload = function(e)
+{ 
     setBlueBarIfVisited();
 }
 

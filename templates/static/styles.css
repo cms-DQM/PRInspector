@@ -18,3 +18,7 @@ body {
 .word-break {
   word-wrap: break-word;
 }
+
+a.disabled {
+  pointer-events: none;
+}
