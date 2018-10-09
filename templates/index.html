@@ -54,7 +54,7 @@
         class="no-color-link">Pending and rejected PRs <b>{{prs|length}}</b></a></h4>
     {% if access_token == None or access_token == '' %}
       <div class="alert alert-primary mb-0" role="alert">
-        You haven't authorized this app to use Github. Please <a href="https://github.com/login/oauth/authorize?client_id=90704daa46bd69de5beb&redirect_uri={{url_for(request.endpoint, _external=True)}}" class="alert-link">login</a> in order for this app to post comments on your behalf.
+        You haven't authorized this app to use Github. Please <a href="https://github.com/login/oauth/authorize?client_id=90704daa46bd69de5beb&redirect_uri={{url_for(request.endpoint, _external=True)}}" class="alert-link">login</a> in order for this app to be able post comments on your behalf.
       </div>
     {%endif%}
 
