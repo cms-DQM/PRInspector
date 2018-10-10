@@ -1,5 +1,5 @@
 
-function loadComments(pr_number, comments_url)
+async function loadComments(pr_number, comments_url)
 {
     // If colapse is open, button was clicked to close it. No need to load comments.
     var colapse = document.getElementById("collapse-comments-" + pr_number)
@@ -13,46 +13,32 @@ function loadComments(pr_number, comments_url)
     var result = []
     var page = []
     var pageIndex = 1
-    
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() 
+
+    while(page.length == 0)
     {
-        if (this.readyState == 4 && this.status == 200) 
-        {
-            page = JSON.parse(xhttp.responseText)
-            result = result.concat(page)
-            pageIndex++
+        var response = await fetch(comments_url + "?page=" + pageIndex)
+        var page = await response.json()
+        result = result.concat(page)
+        pageIndex++
+    }
 
-            if(page.length == 0)
-            {
-                var commentsCount = result.length
+    var commentsCount = result.length
 
-                // Take only last 10 comments
-                result = result.slice(Math.max(result.length - 10, 0))
+    // Take only last 10 comments
+    result = result.slice(Math.max(result.length - 10, 0))
 
-                var hiddenCommentsCount = commentsCount - result.length
-                
-                var commentsContainer = document.getElementById("comments-container-" + pr_number)
-                commentsContainer.innerHTML = createCommentsList(result)
+    var hiddenCommentsCount = commentsCount - result.length
+    
+    var commentsContainer = document.getElementById("comments-container-" + pr_number)
+    commentsContainer.innerHTML = createCommentsList(result)
 
-                if(hiddenCommentsCount != 0)
-                    commentsPreloader.innerHTML = hiddenCommentsCount+ " hidden comments"
-                else
-                    commentsPreloader.style.display = "none"
+    if(hiddenCommentsCount != 0)
+        commentsPreloader.innerHTML = hiddenCommentsCount+ " hidden comments"
+    else
+        commentsPreloader.style.display = "none"
 
-                localStorage.setItem('viewd_at_' + pr_number, new Date().toISOString())
-                setBlueBarIfVisited()
-            }
-            else
-            {
-                xhttp.open("GET", comments_url + "?page=" + pageIndex, true);
-                xhttp.send();
-            }
-        }
-    };
-
-    xhttp.open("GET", comments_url + "?page=" + pageIndex, true);
-    xhttp.send();
+    localStorage.setItem('viewd_at_' + pr_number, new Date().toISOString())
+    setBlueBarIfVisited()
 }
 
 function createCommentsList(comments)
@@ -104,35 +90,66 @@ function formatDate(date)
     return year + "-" + formatedMonth + "-" + formatedDay + " " + formatedHour + ':' + formatedMinute + ':' + formatedSecond;
 }
 
+function showError(message)
+{
+    document.querySelector('#error-modal-body').innerText = message
+    $('#error-modal').modal()
+}
+
 // Action handlers
-function actionRunTests(url, access_token)
+async function actionRunTests(url, access_token, author, pr_number)
 {
-    console.log(access_token)
+    url = "https://api.github.com/repos/andrius-k/PRInspector/issues/1/comments?access_token=" + access_token
+
+    await postComment(url, "please test", pr_number)
 }
 
-function actionAskForIntroduction(url, access_token)
+async function actionAskForIntroduction(url, access_token, author, pr_number)
 {
-    console.log(url)
+    url = "https://api.github.com/repos/andrius-k/PRInspector/issues/1/comments?access_token=" + access_token
+    await postComment(url, "Hi @" + author + ", I can't seem to find you in [DQM contacts list](https://twiki.cern.ch/twiki/bin/viewauth/CMS/DQMContacts). Could you please briefly introduce yourself?", pr_number)
 }
 
-function actionAskForSubsystemName(url, access_token)
+async function actionAskForSubsystemName(url, access_token, author, pr_number)
 {
-    console.log(url)
+    url = "https://api.github.com/repos/andrius-k/PRInspector/issues/1/comments?access_token=" + access_token
+    await postComment(url, "Hi @" + author + ", could you please make sure that subsystem name appears in the title of the PR?", pr_number)
 }
 
-function actionReject(url, access_token)
+async function actionReject(url, access_token, author, pr_number)
 {
-    console.log(url, access_token)
+    url = "https://api.github.com/repos/andrius-k/PRInspector/issues/1/comments?access_token=" + access_token
+    await postComment(url, "-1", pr_number)
 }
 
-function actionSign(url, access_token)
+async function actionSign(url, access_token, author, pr_number)
 {
-    console.log(url)
+    url = "https://api.github.com/repos/andrius-k/PRInspector/issues/1/comments?access_token=" + access_token
+    await postComment(url, "+1", pr_number)
+}
+
+async function postComment(url, comment, pr_number)
+{
+    $("#pr-card-" + pr_number).fadeTo("fast", 0.5)
+    
+    var response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({body: comment}),
+    })
+
+    if(response.status != 201)
+    {
+        showError(await response.text())
+    }
+
+    $("#pr-card-" + pr_number).fadeTo("slow", 1)
+
+    return response
 }
 
 // Set blue bar if visited initially
 window.onload = function(e)
-{ 
+{
     setBlueBarIfVisited();
 }
 
@@ -155,3 +172,5 @@ function setBlueBarIfVisited()
         }
     });
 }
+
+$("[data-toggle=tooltip]").tooltip();

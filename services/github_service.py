@@ -1,3 +1,4 @@
+import datetime
 import urllib.request
 import urllib.parse
 import json
@@ -18,15 +19,32 @@ def exchange_code_to_token(code):
         return None
 
 def get_prs(access_token=None):
-    response = urllib.request.urlopen(__add_token('https://api.github.com/search/issues?q=repo:cms-sw/cmssw+is:pr+state:open+label:dqm-pending', access_token)).read()
+    url = __add_token('https://api.github.com/search/issues?q=repo:cms-sw/cmssw+is:pr+state:open+label:dqm-pending', access_token)
+    response = urllib.request.urlopen(url).read()
     content = json.loads(response)
     pending = content['items']
     
-    response = urllib.request.urlopen(__add_token('https://api.github.com/search/issues?q=repo:cms-sw/cmssw+is:pr+state:open+label:dqm-rejected', access_token)).read()
+    url = __add_token('https://api.github.com/search/issues?q=repo:cms-sw/cmssw+is:pr+state:open+label:dqm-rejected', access_token)
+    response = urllib.request.urlopen(url).read()
     content = json.loads(response)
     rejected = content['items']
 
     return pending + rejected
+
+def get_last_comment(url, updated_at, access_token=None):
+    since = datetime.datetime.strptime(updated_at, "%Y-%m-%dT%H:%M:%SZ")
+    since -= datetime.timedelta(minutes=30)
+    since = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+    
+    url = __add_token(url + '?since=' + since, access_token)
+    response = urllib.request.urlopen(url).read()
+
+    content = json.loads(response)
+    
+    if len(content) > 0:
+        return content[-1]
+    else:
+        return None
 
 def __add_token(url, access_token):
     if access_token != None and access_token != '':

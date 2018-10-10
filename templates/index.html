@@ -54,7 +54,7 @@
         class="no-color-link">Pending and rejected PRs <b>{{prs|length}}</b></a></h4>
     {% if access_token == None or access_token == '' %}
       <div class="alert alert-primary mb-0" role="alert">
-        You haven't authorized this app to use Github. Please <a href="https://github.com/login/oauth/authorize?client_id=90704daa46bd69de5beb&redirect_uri={{url_for(request.endpoint, _external=True)}}" class="alert-link">login</a> in order for this app to be able post comments on your behalf.
+        You haven't authorized this app to use Github. Please <a href="https://github.com/login/oauth/authorize?client_id=90704daa46bd69de5beb&redirect_uri={{url_for(request.endpoint, _external=True)}}&scope=user%20public_repo" class="alert-link">login</a> in order for this app to be able post comments on your behalf.
       </div>
     {%endif%}
 
@@ -64,8 +64,8 @@
         <div class="row">
           <div class="col">
 
-            <div class="pl-2 pt-2 pb-2 mt-3 bg-white rounded shadow-sm pr-card" data-pr-number="{{pr.number}}" data-updated-at="{{pr.updated_at}}">
-              <div class="lead"><a href="{{pr.html_url}}" target="_blank" class="no-color-link">{{pr.title}}</a> <mark>#{{pr.number}}</mark></div>
+            <div class="pl-2 pt-2 pb-2 mt-3 bg-white rounded shadow-sm pr-card" id="pr-card-{{pr.number}}" data-pr-number="{{pr.number}}" data-updated-at="{{pr.updated_at}}">
+              <div class="lead"><a href="{{pr.html_url}}" target="_blank" class="no-color-link" data-toggle="tooltip" data-placement="top" title="{{pr.last_comment.body}}">{{pr.title}}</a> <mark>#{{pr.number}}</mark></div>
               
               <div class="row pt-1">
                 <div class="col-auto">Author: {{pr.user.login}}</div>
@@ -115,11 +115,11 @@
                     <a class="" href="#" id="dropdown-menu-button" data-toggle="dropdown" aria-haspopup="true"
                       aria-expanded="false">Actions</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown-menu-button">
-                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#" onclick="actionRunTests('{{pr.comments_url}}', '{{access_token}}')">Run Tests</a>
-                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#" onclick="actionAskForIntroduction('{{pr.comments_url}}'), '{{access_token}}'">Ask for introduction</a>
-                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#" onclick="actionAskForSubsystemName('{{pr.comments_url}}'), '{{access_token}}'">Ask to put subsystem name in the title</a>
-                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#" onclick="actionReject('{{pr.comments_url}}'), '{{access_token}}'">-1</a>
-                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#" onclick="actionSign('{{pr.comments_url}}'), '{{access_token}}'">+1</a>
+                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#" onclick="actionRunTests('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">Run Tests</a>
+                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#" onclick="actionAskForIntroduction('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">Ask for introduction</a>
+                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#" onclick="actionAskForSubsystemName('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">Ask to put subsystem name in the title</a>
+                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#" onclick="actionReject('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">-1</a>
+                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#" onclick="actionSign('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">+1</a>
                     </div>
                   </div>
                   <div class="pull-right"><a class="pr-3" target="_blank" href="{{pr.html_url}}/files">Code</a></div>
@@ -131,6 +131,26 @@
           </div>
         </div>
       {% endfor %}
+
+      <!-- Error Modal -->
+      <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="error-modal-label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="error-modal-label">Error</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" id="error-modal-body">
+              
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- <div class="row">
         <div class="col">
