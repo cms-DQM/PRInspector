@@ -87,28 +87,7 @@
                 <div class="col-auto text-success">Subsystem is in the title </div>
                 <div class="col-auto text-danger">Author does not appear in the DQM list</div>
               </div>
-  
-              <div class="collapse" id="collapse-comments-{{pr.number}}">
 
-                <div class="pt-3 border-bottom">
-                  <img class="rounded pull-left" style="width: 32px; height: 32px;" src="{{pr.user.avatar_url}}">
-                  <div class="media-body small text-muted pl-5">
-                    <div class="row">
-                      <div class="col-auto"><strong class="text-gray-dark">{{pr.user.login}}</strong></div>
-                      <div class="col-auto">{{pr.created_at|datetime}}</div>
-                    </div>
-                    <div class="row word-break mr-2">
-                      <div class="col"><p>{{pr.body}}</p></div>
-                    </div>      
-                  </div>
-                </div>
-
-                <div class="text-center text-info p-2" id="comments-preloader-{{pr.number}}">Loading...</div>
-
-                <div id="comments-container-{{pr.number}}"></div>
-
-              </div>
-  
               <div class="row pt-1 pr-3">
                 <div class="col">
                   <div class="dropdown pull-right">
@@ -123,9 +102,32 @@
                     </div>
                   </div>
                   <div class="pull-right"><a class="pr-3" target="_blank" href="{{pr.html_url}}/files">Code</a></div>
-                  <div class="pull-right"><a class="pr-3" data-toggle="collapse" href="#collapse-comments-{{pr.number}}" onclick="loadComments({{pr.number}}, '{{pr.comments_url}}');">Comments</a></div>
+                  <div class="pull-right"><a class="pr-3" data-toggle="collapse" href="#collapse-comments-{{pr.number}}" onclick="loadComments({{pr.number}}, '{{pr.comments_url}}');">Discussion</a></div>
                 </div>
               </div>
+  
+              <div class="collapse pt-2" id="collapse-comments-{{pr.number}}">
+
+                <div class="pt-3 border-top border-bottom">
+                  <img class="rounded pull-left" style="width: 32px; height: 32px;" src="{{pr.user.avatar_url}}">
+                  <div class="media-body small text-muted pl-5">
+                    <div class="row">
+                      <div class="col-auto"><strong class="text-gray-dark">{{pr.user.login}}</strong></div>
+                      <div class="col-auto">{{pr.created_at|datetime}}</div>
+                    </div>
+                    <div class="row word-break mr-2">
+                      <div class="col"><p>{{pr.body|safe}}</p></div>
+                    </div>      
+                  </div>
+                </div>
+
+                <div class="text-center text-info p-2 bg-light" id="comments-preloader-{{pr.number}}">Loading...</div>
+
+                <div id="comments-container-{{pr.number}}"></div>
+
+              </div>
+  
+              <!-- Place buttons here if you want them to appear bellow the expand area -->
   
             </div>
           </div>
@@ -239,6 +241,7 @@
   <script>window.jQuery || document.write('<script src="static/js/vendor/jquery.min.js"><\/script>')</script>
   <script src="static/js/bootstrap.min.js"></script>
 
+  <script src="static/js/config.js"></script> 
   <script src="static/js/prs.js"></script>
 </body>
 

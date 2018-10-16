@@ -1,3 +1,4 @@
+from services.text_enrichment_service import enrich_comment
 import datetime
 import urllib.request
 import urllib.parse
@@ -29,7 +30,11 @@ def get_prs(access_token=None):
     content = json.loads(response)
     rejected = content['items']
 
-    return pending + rejected
+    prs = pending + rejected
+    for pr in prs:
+        pr['body'] = enrich_comment(pr['body'])
+
+    return prs
 
 def get_last_comment(url, updated_at, access_token=None):
     since = datetime.datetime.strptime(updated_at, "%Y-%m-%dT%H:%M:%SZ")
@@ -45,6 +50,13 @@ def get_last_comment(url, updated_at, access_token=None):
         return content[-1]
     else:
         return None
+
+# TODO: Remove this
+def get_test():
+    url = 'https://twiki.cern.ch/twiki/bin/viewauth/CMS/DQMContacts'
+    req = urllib.request.Request(url)
+    req.add_header('Cookie', '_shibsession_64656661756c7468747470733a2f2f73686962342e6365726e2e63682f53686962626f6c6574682e73736f2f41444653=_59d5aa4ae6cdf757e09e31a7eef90ecc')
+    return urllib.request.urlopen(req).read()
 
 def __add_token(url, access_token):
     if access_token != None and access_token != '':

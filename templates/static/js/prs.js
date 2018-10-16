@@ -8,24 +8,27 @@ async function loadComments(pr_number, comments_url)
     
     var commentsPreloader = document.getElementById("comments-preloader-" + pr_number)
     commentsPreloader.innerHTML = "Loading..."
-    commentsPreloader.style.display = ""
+    // commentsPreloader.style.display = ""
 
     var result = []
     var page = []
     var pageIndex = 1
-
-    while(page.length == 0)
+    
+    do
     {
         var response = await fetch(comments_url + "?page=" + pageIndex)
         var page = await response.json()
         result = result.concat(page)
         pageIndex++
-    }
+    } while(page.length != 0)
 
     var commentsCount = result.length
 
     // Take only last 10 comments
     result = result.slice(Math.max(result.length - 10, 0))
+
+    // Reverse because we want to see newest comments at the top
+    result = result.reverse()
 
     var hiddenCommentsCount = commentsCount - result.length
     
@@ -33,9 +36,10 @@ async function loadComments(pr_number, comments_url)
     commentsContainer.innerHTML = createCommentsList(result)
 
     if(hiddenCommentsCount != 0)
-        commentsPreloader.innerHTML = hiddenCommentsCount+ " hidden comments"
+        commentsPreloader.innerHTML = hiddenCommentsCount + " hidden comments (newest at the top)"
     else
-        commentsPreloader.style.display = "none"
+        commentsPreloader.innerHTML = "No hidden comments (newest at the top)"
+        // commentsPreloader.style.display = "none"
 
     localStorage.setItem('viewd_at_' + pr_number, new Date().toISOString())
     setBlueBarIfVisited()
@@ -50,13 +54,29 @@ function createCommentsList(comments)
         date = formatDate(date)
 
         var body = comment.body
-        body = body.replace(/\n/g, "<br>")
+        
+        // Replace possibly PR references (#number) with url
+        var regex = /( )(#)([0-9]+)/ig
+        body = body.replace(regex, "$1<a href='" + getRepoUrl() + "$3" + "' target='_blank'>$2$3</a>")
 
-        var regex = /(\b(https?|):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig
-        body = body.replace(regex, "<a href='$1' target='_blank'>$1</a>")
+        // Make urls clickable
+        // var regex = /(http[s]?:\/\/(?:[a-zA-Z]|[0-9]|(?![,\(\)])[$-_@.&+#~]|[!*]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)/ig
+        var regex = /([^"']|^)(https?:\/\/[-\w.%&?/:_@#=+;]+[^."')\s ])/ig
+        body = body.replace(regex, "$1<a href='$2' target='_blank'>$2</a>")
+        
+        // Replace line breaks
+        body = body.replace(/\n/ig, "<br>")
+
+        // Replace code tags
+        var regex = /`(.*?)`/ig
+        body = body.replace(regex, "<code>$1</code>")
+
+        // Bold usernames
+        var regex = /(@[a-z\d]+-*[a-z\d]+)/ig
+        body = body.replace(regex, "<strong>$1</strong>")
 
         result += `
-        <div class="pt-3 border-bottom">
+        <div class="pt-3 border-top">
             <img class="rounded pull-left" style="width: 32px; height: 32px;" src="` + comment.user.avatar_url + `">
             <div class="media-body small text-muted pl-5">
                 <div class="row">
@@ -99,31 +119,35 @@ function showError(message)
 // Action handlers
 async function actionRunTests(url, access_token, author, pr_number)
 {
+    author = "@andrius-k"
     url = "https://api.github.com/repos/andrius-k/PRInspector/issues/1/comments?access_token=" + access_token
-
     await postComment(url, "please test", pr_number)
 }
 
 async function actionAskForIntroduction(url, access_token, author, pr_number)
 {
+    author = "@andrius-k"
     url = "https://api.github.com/repos/andrius-k/PRInspector/issues/1/comments?access_token=" + access_token
     await postComment(url, "Hi @" + author + ", I can't seem to find you in [DQM contacts list](https://twiki.cern.ch/twiki/bin/viewauth/CMS/DQMContacts). Could you please briefly introduce yourself?", pr_number)
 }
 
 async function actionAskForSubsystemName(url, access_token, author, pr_number)
 {
+    author = "@andrius-k"
     url = "https://api.github.com/repos/andrius-k/PRInspector/issues/1/comments?access_token=" + access_token
     await postComment(url, "Hi @" + author + ", could you please make sure that subsystem name appears in the title of the PR?", pr_number)
 }
 
 async function actionReject(url, access_token, author, pr_number)
 {
+    author = "@andrius-k"
     url = "https://api.github.com/repos/andrius-k/PRInspector/issues/1/comments?access_token=" + access_token
     await postComment(url, "-1", pr_number)
 }
 
 async function actionSign(url, access_token, author, pr_number)
 {
+    author = "@andrius-k"
     url = "https://api.github.com/repos/andrius-k/PRInspector/issues/1/comments?access_token=" + access_token
     await postComment(url, "+1", pr_number)
 }
