@@ -8,12 +8,23 @@ def get_contacts_list_html():
     cookies = __get_and_save_cookies(config.TWIKI_CONTACTS_URL)
     return requests.get(config.TWIKI_CONTACTS_URL, cookies=cookies).text
 
+def get_tag_collector_html():
+    cookies = __get_and_save_cookies(config.TWIKI_TAG_COLLECTOR_URL)
+    return requests.get(config.TWIKI_TAG_COLLECTOR_URL, cookies=cookies).text
+
 def get_author_mentioned_info(author, html):
     # TODO improve logic
     if author in html:
         return { 'text': 'Author is known', 'class': 'text-success' }
     else:
         return { 'text': 'Author is unknown', 'class': 'text-danger' }
+
+def get_tag_collector_info(pr_number, html):
+    # TODO improve logic
+    if str(pr_number) in html:
+        return { 'text': 'Tested in Tag Collector', 'class': 'text-success' }
+    else:
+        return { 'text': 'Not tested in Tag Collector', 'class': 'text-danger' }
 
 def __get_and_save_cookies(url):
     hash = hashlib.md5(url.encode()).hexdigest()

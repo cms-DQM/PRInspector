@@ -1,7 +1,7 @@
 from flask import Flask, make_response, render_template, request, redirect
 from services.github_service import get_prs, get_last_comment, exchange_code_to_token
 from services.pr_info_service import get_subsystem_in_title_info
-from services.twiki_service import get_contacts_list_html, get_author_mentioned_info
+from services.twiki_service import get_contacts_list_html, get_tag_collector_html, get_author_mentioned_info, get_tag_collector_info
 import urllib.request
 import json
 
@@ -31,10 +31,10 @@ def get_prs_view(code):
     contacts_html = get_contacts_list_html()
     for pr in prs:
         pr['additional']['author'] = get_author_mentioned_info(pr['user']['login'], contacts_html)
-    
-    # Get last comment
-    # for pr in prs:
-    #     pr['additional']['last_comment'] = { 'body': '...' }
-        #pr['last_comment'] = get_last_comment(pr['comments_url'], pr['updated_at'], access_token)
+
+    # Check if pr is tested in tag collector
+    tag_collector_html = get_tag_collector_html()
+    for pr in prs:
+        pr['additional']['tag_collector'] = get_tag_collector_info(pr['number'], tag_collector_html)
 
     return make_response(render_template('index.html', prs=prs, access_token=access_token))
