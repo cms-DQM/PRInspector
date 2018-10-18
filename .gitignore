@@ -1,0 +1,5 @@
+.DS_Store
+*.py[cod]
+*$py.class
+__pycache__/
+private/*

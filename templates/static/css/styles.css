@@ -26,3 +26,11 @@ a.disabled {
 .tooltip-inner {
   max-width: 400px;
 }
+
+.bg-action-needed {
+  background-color: #fff3cd;
+}
+
+.bg-ready-to-sign {
+  background-color: #dff1e4;
+}

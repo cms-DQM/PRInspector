@@ -51,13 +51,6 @@ def get_last_comment(url, updated_at, access_token=None):
     else:
         return None
 
-# TODO: Remove this
-def get_test():
-    url = 'https://twiki.cern.ch/twiki/bin/viewauth/CMS/DQMContacts'
-    req = urllib.request.Request(url)
-    req.add_header('Cookie', '_shibsession_64656661756c7468747470733a2f2f73686962342e6365726e2e63682f53686962626f6c6574682e73736f2f41444653=_59d5aa4ae6cdf757e09e31a7eef90ecc')
-    return urllib.request.urlopen(req).read()
-
 def __add_token(url, access_token):
     if access_token != None and access_token != '':
         return url + '&access_token=' + access_token

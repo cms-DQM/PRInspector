@@ -16,7 +16,7 @@
   <link href="static/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Custom styles for this template -->
-  <link href="static/styles.css" rel="stylesheet">
+  <link href="static/css/styles.css" rel="stylesheet">
 
   <!-- Fontawesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -65,7 +65,7 @@
           <div class="col">
 
             <div class="pl-2 pt-2 pb-2 mt-3 bg-white rounded shadow-sm pr-card" id="pr-card-{{pr.number}}" data-pr-number="{{pr.number}}" data-updated-at="{{pr.updated_at}}">
-              <div class="lead"><a href="{{pr.html_url}}" target="_blank" class="no-color-link" data-toggle="tooltip" data-placement="top" title="{{pr.last_comment.body}}">{{pr.title}}</a> <mark>#{{pr.number}}</mark></div>
+              <div class="lead"><a href="{{pr.html_url}}" target="_blank" class="no-color-link" data-toggle="tooltip" data-placement="top" data-html="true" title="{{pr.body}}">{{pr.additional.subsystem.enriched_title|safe}}</a> <mark>#{{pr.number}}</mark></div>
               
               <div class="row pt-1">
                 <div class="col-auto">Author: {{pr.user.login}}</div>
@@ -82,10 +82,10 @@
               </div>
   
               <div class="row pt-1">
-                <div class="col-auto text-success">Tag collector: Tested <i class="fa fa-check"></i></div>
+                <div class="col-auto text-success">Tag collector: Tested</div>
                 <div class="col-auto text-info">Probably Online</div>
-                <div class="col-auto text-success">Subsystem is in the title </div>
-                <div class="col-auto text-danger">Author does not appear in the DQM list</div>
+                <div class="col-auto {{pr.additional.subsystem.class}}">{{pr.additional.subsystem.text}}</div>
+                <div class="col-auto {{pr.additional.author.class}}">{{pr.additional.author.text}}</div>
               </div>
 
               <div class="row pt-1 pr-3">
