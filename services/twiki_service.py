@@ -5,8 +5,9 @@ import pickle
 import config
 
 def get_contacts_list_html():
-    cookies = __get_and_save_cookies(config.TWIKI_CONTACTS_URL)
-    return requests.get(config.TWIKI_CONTACTS_URL, cookies=cookies).text
+    # cookies = __get_and_save_cookies(config.TWIKI_CONTACTS_URL)
+    # return requests.get(config.TWIKI_CONTACTS_URL, cookies=cookies).text
+    return requests.get('https://threus.web.cern.ch/threus/ppd/ppd_contacts').text
 
 def get_tag_collector_html():
     cookies = __get_and_save_cookies(config.TWIKI_TAG_COLLECTOR_URL)
@@ -14,7 +15,7 @@ def get_tag_collector_html():
 
 def get_author_mentioned_info(author, html):
     # TODO improve logic
-    if author in html:
+    if '[[https://github.com/%s][%s]'%(author, author) in html:
         return { 'text': 'Author is known', 'class': 'text-success' }
     else:
         return { 'text': 'Author is unknown', 'class': 'text-danger' }
@@ -37,3 +38,5 @@ def __get_and_save_cookies(url):
         pickle.dump(cookies, open(file, 'wb'))
 
     return cookies
+
+# https://threus.web.cern.ch/threus/ppd/ppd_contacts
