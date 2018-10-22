@@ -103,18 +103,18 @@
                   <a class="" href="#" id="dropdown-menu-button" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">Actions</a>
                   <div class="dropdown-menu" aria-labelledby="dropdown-menu-button">
-                    <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#"
+                    <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled text-muted{%endif%}"
                       onclick="actionRunTests('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">Run
                       Tests</a>
-                    <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#"
+                    <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled text-muted{%endif%}"
                       onclick="actionAskForIntroduction('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">Ask
                       for introduction</a>
-                    <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#"
+                    <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled text-muted{%endif%}"
                       onclick="actionAskForSubsystemName('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">Ask
                       to put subsystem name in the title</a>
-                    <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#"
+                    <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled text-muted{%endif%}"
                       onclick="actionReject('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">-1</a>
-                    <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#"
+                    <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled text-muted{%endif%}"
                       onclick="actionSign('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">+1</a>
                   </div>
                 </div>
