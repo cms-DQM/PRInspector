@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from views.prs import get_prs_view
+from views.logout import github_logout
 from datetime import datetime
 import argparse
 import time
@@ -12,6 +13,10 @@ app = Flask(__name__,
 def index():
     code = request.args.get('code')
     return get_prs_view(code)
+
+@app.route('/logout')
+def logout():
+    return github_logout()
 
 @app.template_filter('datetime')
 def format_date(date_string):
