@@ -1,4 +1,5 @@
 from services.text_enrichment_service import enrich_comment
+import config
 import datetime
 import urllib.request
 import urllib.parse
@@ -9,7 +10,8 @@ def exchange_code_to_token(code):
         return None
     
     try:
-        data = {'client_id': '90704daa46bd69de5beb', 'client_secret': '54b4ed1ffecb539996bdee620fc963040cb14cda', 'code': code}
+        print(config.get_github_client_secret())
+        data = {'client_id': config.get_github_client_id(), 'client_secret': config.get_github_client_secret(), 'code': code}
         req = urllib.request.Request('https://github.com/login/oauth/access_token', urllib.parse.urlencode(data).encode('utf-8'))
         req.add_header('Accept', 'application/json')
         response = urllib.request.urlopen(req).read()
@@ -33,7 +35,7 @@ def get_prs(access_token=None):
     prs = pending + rejected
     for pr in prs:
         pr['body'] = enrich_comment(pr['body'])
-
+    
     return prs
 
 def get_last_comment(url, updated_at, access_token=None):

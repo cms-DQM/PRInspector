@@ -2,6 +2,7 @@ from flask import Flask, make_response, render_template, request, redirect
 from services.github_service import get_prs, get_last_comment, exchange_code_to_token
 from services.pr_info_service import get_subsystem_in_title_info
 from services.twiki_service import get_contacts_list_html, get_tag_collector_html, get_author_mentioned_info, get_tag_collector_info
+import config
 import urllib.request
 import json
 
@@ -18,7 +19,7 @@ def get_prs_view(code):
         access_token = request.cookies.get('access_token')
     
     prs = get_prs(access_token)
-
+    
     # Init key for additional properties
     for pr in prs:
         pr['additional'] = {}
@@ -45,4 +46,4 @@ def get_prs_view(code):
         elif any(x for x in pr['labels'] if x['name'] == 'tests-approved') and pr['additional']['tag_collector']['tested']:
             pr['additional']['background'] = 'bg-ready'
 
-    return make_response(render_template('index.html', prs=prs, access_token=access_token))
+    return make_response(render_template('index.html', prs=prs, access_token=access_token, oauth_client_id=config.get_github_client_id()))

@@ -1,4 +1,9 @@
+IS_TEST = True
+
 REPOSITORY = 'cms-sw/cmssw'
+
+def get_repo_url():
+    return 'https://github.com/' + REPOSITORY + '/'
 
 CERN_SSO_CERT_FILE = 'private/cert.pem'
 CERN_SSO_KEY_FILE = 'private/cert.key'
@@ -7,8 +12,20 @@ CERN_SSO_COOKIES_LOCATION = 'private/'
 TWIKI_CONTACTS_URL = 'https://threus.web.cern.ch/threus/ppd/ppd_contacts'
 TWIKI_TAG_COLLECTOR_URL = 'https://twiki.cern.ch/twiki/bin/edit/CMS/DQMP5TagCollector?nowysiwyg=1'
 
-def get_repo_url():
-    return 'https://github.com/' + REPOSITORY + '/'
+__github_client_id = None
+__github_client_secret = None
+
+def get_github_client_id():
+    global __github_client_id
+    if __github_client_id == None:
+        __github_client_id = open('private/github_oauth_data.txt', 'r').readlines()[1].strip()
+    return __github_client_id
+
+def get_github_client_secret():
+    global __github_client_secret
+    if __github_client_secret == None:
+        __github_client_secret = open('private/github_oauth_data.txt', 'r').readlines()[2].strip()
+    return __github_client_secret
 
 def get_subsystems():
     return ['l1t',

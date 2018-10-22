@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from views.prs import get_prs_view
 from views.logout import github_logout
 from datetime import datetime
+import config
 import argparse
 import time
 
@@ -40,5 +41,7 @@ if __name__ == '__main__':
     parser.add_argument('-d', dest='debug', action='store_true',
                     help='debug mode')
     args = parser.parse_args()
+    
+    config.IS_TEST = args.debug
 
     run_flask(args.debug)
