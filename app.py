@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from views.prs import get_prs_view
 from datetime import datetime
+import argparse
 import time
 
 app = Flask(__name__,
@@ -23,11 +24,16 @@ def format_date(date_string):
     date = utc2local(date)
     return date.strftime("%Y-%m-%d %H:%M:%S")
 
-def run_flask():
+def run_flask(debug=True):
     app.run(host='0.0.0.0',
             port=8080,
-            debug=True,
+            debug=debug,
             threaded=True)
 
 if __name__ == '__main__':
-    run_flask()
+    parser = argparse.ArgumentParser(description='Run the web app.')
+    parser.add_argument('-d', dest='debug', action='store_true',
+                    help='debug mode')
+    args = parser.parse_args()
+
+    run_flask(args.debug)

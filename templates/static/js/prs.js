@@ -8,7 +8,6 @@ async function loadComments(pr_number, comments_url)
     
     var commentsPreloader = document.getElementById("comments-preloader-" + pr_number)
     commentsPreloader.innerHTML = "Loading..."
-    // commentsPreloader.style.display = ""
 
     var result = []
     var page = []
@@ -60,7 +59,6 @@ function createCommentsList(comments)
         body = body.replace(regex, "$1<a href='" + getRepoUrl() + "$3" + "' target='_blank'>$2$3</a>")
 
         // Make urls clickable
-        // var regex = /(http[s]?:\/\/(?:[a-zA-Z]|[0-9]|(?![,\(\)])[$-_@.&+#~]|[!*]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)/ig
         var regex = /([^"']|^)(https?:\/\/[-\w.%&?/:_@#=+;]+[^."')\s ])/ig
         body = body.replace(regex, "$1<a href='$2' target='_blank'>$2</a>")
         
@@ -119,36 +117,31 @@ function showError(message)
 // Action handlers
 async function actionRunTests(url, access_token, author, pr_number)
 {
-    author = "@andrius-k"
-    url = "https://api.github.com/repos/andrius-k/PRInspector/issues/1/comments?access_token=" + access_token
+    url = url + "?access_token=" + access_token
     await postComment(url, "please test", pr_number)
 }
 
 async function actionAskForIntroduction(url, access_token, author, pr_number)
 {
-    author = "@andrius-k"
-    url = "https://api.github.com/repos/andrius-k/PRInspector/issues/1/comments?access_token=" + access_token
+    url = url + "?access_token=" + access_token
     await postComment(url, "Hi @" + author + ", I can't seem to find you in [DQM contacts list](https://twiki.cern.ch/twiki/bin/viewauth/CMS/DQMContacts). Could you please briefly introduce yourself?", pr_number)
 }
 
 async function actionAskForSubsystemName(url, access_token, author, pr_number)
 {
-    author = "@andrius-k"
-    url = "https://api.github.com/repos/andrius-k/PRInspector/issues/1/comments?access_token=" + access_token
+    url = url + "?access_token=" + access_token
     await postComment(url, "Hi @" + author + ", could you please make sure that subsystem name appears in the title of the PR?", pr_number)
 }
 
 async function actionReject(url, access_token, author, pr_number)
 {
-    author = "@andrius-k"
-    url = "https://api.github.com/repos/andrius-k/PRInspector/issues/1/comments?access_token=" + access_token
+    url = url + "?access_token=" + access_token
     await postComment(url, "-1", pr_number)
 }
 
 async function actionSign(url, access_token, author, pr_number)
 {
-    author = "@andrius-k"
-    url = "https://api.github.com/repos/andrius-k/PRInspector/issues/1/comments?access_token=" + access_token
+    url = url + "?access_token=" + access_token
     await postComment(url, "+1", pr_number)
 }
 

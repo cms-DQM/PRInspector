@@ -53,89 +53,107 @@
     <h4><a href="https://github.com/cms-sw/cmssw/pulls?utf8=✓&q=is%3Apr+is%3Aopen+label%3Adqm-pending" target="_blank"
         class="no-color-link">Pending and rejected PRs <b>{{prs|length}}</b></a></h4>
     {% if access_token == None or access_token == '' %}
-      <div class="alert alert-primary mb-0" role="alert">
-        You haven't authorized this app to use Github. Please <a href="https://github.com/login/oauth/authorize?client_id=90704daa46bd69de5beb&redirect_uri={{url_for(request.endpoint, _external=True)}}&scope=user%20public_repo" class="alert-link">login</a> in order for this app to be able post comments on your behalf.
-      </div>
+    <div class="alert alert-primary mb-0" role="alert">
+      You haven't authorized this app to use Github. Please <a href="https://github.com/login/oauth/authorize?client_id=90704daa46bd69de5beb&redirect_uri={{url_for(request.endpoint, _external=True)}}&scope=user%20public_repo"
+        class="alert-link">login</a> in order for this app to be able post comments on your behalf.
+    </div>
     {%endif%}
 
     <div class="list">
 
       {% for pr in prs %}
-        <div class="row">
-          <div class="col">
+      <div class="row">
+        <div class="col">
 
-            <div class="pl-2 pt-2 pb-2 mt-3 bg-white rounded shadow-sm pr-card" id="pr-card-{{pr.number}}" data-pr-number="{{pr.number}}" data-updated-at="{{pr.updated_at}}">
-              <div class="lead"><a href="{{pr.html_url}}" target="_blank" class="no-color-link" data-toggle="tooltip" data-placement="top" data-html="true" title="{{pr.body}}">{{pr.additional.subsystem.enriched_title|safe}}</a> <mark>#{{pr.number}}</mark></div>
-              
-              <div class="row pt-1">
-                <div class="col-auto">Author: {{pr.user.login}}</div>
-                <div class="col-auto">Date: {{pr.created_at|datetime}}</div>
-                <div class="col-auto">{{pr.comments}} comments. Last: {{pr.updated_at|datetime}}</div>
-              </div>
-  
-              <div class="row">
-                <div class="col">
-                  {% for label in pr.labels %}
-                    <span class="badge" style="background-color:#{{label.color}}">{{label.name}}</span>
-                  {% endfor %}
-                </div>
-              </div>
-  
-              <div class="row pt-1">
-                <div class="col-auto {{pr.additional.tag_collector.class}}">{{pr.additional.tag_collector.text}}</div>
-                <div class="col-auto text-info">Probably Online</div>
-                <div class="col-auto {{pr.additional.subsystem.class}}">{{pr.additional.subsystem.text}}</div>
-                <div class="col-auto {{pr.additional.author.class}}">{{pr.additional.author.text}}</div>
-              </div>
+          <div class="pl-2 pt-2 pb-2 mt-3 rounded shadow-sm pr-card {{pr.additional.background}}" id="pr-card-{{pr.number}}"
+            data-pr-number="{{pr.number}}" data-updated-at="{{pr.updated_at}}">
+            <div class="lead"><a href="{{pr.html_url}}" target="_blank" class="no-color-link" data-toggle="tooltip"
+                data-placement="top" data-html="true" title="{{pr.body}}">{{pr.additional.subsystem.enriched_title|safe}}</a>
+              <mark>#{{pr.number}}</mark></div>
 
-              <div class="row pt-1 pr-3">
-                <div class="col">
-                  <div class="dropdown pull-right">
-                    <a class="" href="#" id="dropdown-menu-button" data-toggle="dropdown" aria-haspopup="true"
-                      aria-expanded="false">Actions</a>
-                    <div class="dropdown-menu" aria-labelledby="dropdown-menu-button">
-                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#" onclick="actionRunTests('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">Run Tests</a>
-                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#" onclick="actionAskForIntroduction('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">Ask for introduction</a>
-                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#" onclick="actionAskForSubsystemName('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">Ask to put subsystem name in the title</a>
-                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#" onclick="actionReject('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">-1</a>
-                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#" onclick="actionSign('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">+1</a>
-                    </div>
-                  </div>
-                  <div class="pull-right"><a class="pr-3" target="_blank" href="{{pr.html_url}}/files">Code</a></div>
-                  <div class="pull-right"><a class="pr-3" data-toggle="collapse" href="#collapse-comments-{{pr.number}}" onclick="loadComments({{pr.number}}, '{{pr.comments_url}}');">Discussion</a></div>
-                </div>
-              </div>
-  
-              <div class="collapse pt-2" id="collapse-comments-{{pr.number}}">
-
-                <div class="pt-3 border-top border-bottom">
-                  <img class="rounded pull-left" style="width: 32px; height: 32px;" src="{{pr.user.avatar_url}}">
-                  <div class="media-body small text-muted pl-5">
-                    <div class="row">
-                      <div class="col-auto"><strong class="text-gray-dark">{{pr.user.login}}</strong></div>
-                      <div class="col-auto">{{pr.created_at|datetime}}</div>
-                    </div>
-                    <div class="row word-break mr-2">
-                      <div class="col"><p>{{pr.body|safe}}</p></div>
-                    </div>      
-                  </div>
-                </div>
-
-                <div class="text-center text-info p-2 bg-light" id="comments-preloader-{{pr.number}}">Loading...</div>
-
-                <div id="comments-container-{{pr.number}}"></div>
-
-              </div>
-  
-              <!-- Place buttons here if you want them to appear bellow the expand area -->
-  
+            <div class="row pt-1">
+              <div class="col-auto">Author: {{pr.user.login}}</div>
+              <div class="col-auto">Date: {{pr.created_at|datetime}}</div>
+              <div class="col-auto">{{pr.comments}} comments. Last: {{pr.updated_at|datetime}}</div>
             </div>
+
+            <div class="row">
+              <div class="col">
+                {% for label in pr.labels %}
+                <span class="badge" style="background-color:#{{label.color}}">{{label.name}}</span>
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="row pt-1">
+              <div class="col-auto {{pr.additional.tag_collector.class}}" data-toggle="tooltip" data-placement="bottom"
+                title="{{pr.additional.tag_collector.description}}">{{pr.additional.tag_collector.text}}</div>
+              <!-- <div class="col-auto text-info">Probably Online</div> -->
+              <div class="col-auto {{pr.additional.subsystem.class}}" data-toggle="tooltip" data-placement="bottom"
+                title="{{pr.additional.subsystem.description}}">{{pr.additional.subsystem.text}}</div>
+              <div class="col-auto {{pr.additional.author.class}}" data-toggle="tooltip" data-placement="bottom" title="{{pr.additional.author.description}}">{{pr.additional.author.text}}</div>
+            </div>
+
+            <div class="row pt-1 pr-3">
+              <div class="col">
+                <div class="dropdown pull-right">
+                  <a class="" href="#" id="dropdown-menu-button" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">Actions</a>
+                  <div class="dropdown-menu" aria-labelledby="dropdown-menu-button">
+                    <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#"
+                      onclick="actionRunTests('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">Run
+                      Tests</a>
+                    <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#"
+                      onclick="actionAskForIntroduction('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">Ask
+                      for introduction</a>
+                    <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#"
+                      onclick="actionAskForSubsystemName('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">Ask
+                      to put subsystem name in the title</a>
+                    <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#"
+                      onclick="actionReject('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">-1</a>
+                    <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled{%endif%}" href="#"
+                      onclick="actionSign('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">+1</a>
+                  </div>
+                </div>
+                <div class="pull-right"><a class="pr-3" target="_blank" href="{{pr.html_url}}/files">Code</a></div>
+                <div class="pull-right"><a class="pr-3" data-toggle="collapse" href="#collapse-comments-{{pr.number}}"
+                    onclick="loadComments({{pr.number}}, '{{pr.comments_url}}');">Discussion</a></div>
+              </div>
+            </div>
+
+            <div class="collapse pt-2" id="collapse-comments-{{pr.number}}">
+
+              <div class="pt-3 border-top border-bottom">
+                <img class="rounded pull-left" style="width: 32px; height: 32px;" src="{{pr.user.avatar_url}}">
+                <div class="media-body small text-muted pl-5">
+                  <div class="row">
+                    <div class="col-auto"><strong class="text-gray-dark">{{pr.user.login}}</strong></div>
+                    <div class="col-auto">{{pr.created_at|datetime}}</div>
+                  </div>
+                  <div class="row word-break mr-2">
+                    <div class="col">
+                      <p>{{pr.body|safe}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-center text-info p-2 bg-light" id="comments-preloader-{{pr.number}}">Loading...</div>
+
+              <div id="comments-container-{{pr.number}}"></div>
+
+            </div>
+
+            <!-- Place buttons here if you want them to appear bellow the expand area -->
+
           </div>
         </div>
+      </div>
       {% endfor %}
 
       <!-- Error Modal -->
-      <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="error-modal-label" aria-hidden="true">
+      <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="error-modal-label"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -145,7 +163,7 @@
               </button>
             </div>
             <div class="modal-body" id="error-modal-body">
-              
+
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -154,81 +172,7 @@
         </div>
       </div>
 
-      <!-- <div class="row">
-        <div class="col">
-          <div class="vertical-strip pl-2 pt-2 pb-2 mt-3 bg-white rounded shadow-sm">
-            <div class="lead"><a href="https://github.com/cms-sw/cmssw/pull/22594" target="blank" class="no-color-link"><em>Tau</em>
-                reconstruction based on miniAOD event content</a> <mark>#22594</mark></div>
-
-            <div class="row pt-2">
-              <div class="col-auto">Author: roger-wolf</div>
-              <div class="col-auto">Date: 13 Mar</div>
-              <div class="col-auto">15 comments. Last: 6h ago</div>
-            </div>
-
-            <div class="row pt-2">
-              <div class="col">
-                <span class="badge" style="background-color:#ff8000">analysis-pending</span>
-                <span class="badge" style="background-color:#ff8000">analysis-pending</span>
-                <span class="badge" style="background-color:#ff8000">analysis-pending</span>
-                <span class="badge" style="background-color:#ff8000">analysis-pending</span>
-                <span class="badge" style="background-color:#ff8000">analysis-pending</span>
-                <span class="badge" style="background-color:#ff8000">analysis-pending</span>
-                <span class="badge" style="background-color:#ff8000">analysis-pending</span>
-                <span class="badge" style="background-color:#ff8000">analysis-pending</span>
-                <span class="badge" style="background-color:#ff8000">analysis-pending</span>
-                <span class="badge" style="background-color:#ff8000">analysis-pending</span>
-                <span class="badge" style="background-color:#ff8000">analysis-pending</span>
-                <span class="badge" style="background-color:#ff8000">analysis-pending</span>
-              </div>
-            </div>
-
-            <div class="row pt-2">
-              <div class="col-auto text-success">Tag colelctor: Tested <i class="fa fa-check"></i></div>
-              <div class="col-auto text-info">Probably Online</div>
-              <div class="col-auto text-success">Subsystem is in the title </div>
-              <div class="col-auto text-danger">Author does not appear in the DQM list</div>
-            </div>
-
-            <div class="collapse" id="collapseExample2">
-              <div class="media text-muted pt-3">
-                <img alt="32x32" class="mr-2 rounded" style="width: 32px; height: 32px;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2232%22%20height%3D%2232%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1664406f760%20text%20%7B%20fill%3A%23007bff%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A2pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1664406f760%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20fill%3D%22%23007bff%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2211.828125%22%20y%3D%2217.0078125%22%3E32x32%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
-                  data-holder-rendered="true">
-                <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                  <strong class="d-block text-gray-dark">@username</strong>
-                  Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor
-                  mauris condimentum nibh, ut fermentum massa justo sit amet risus.
-                </p>
-              </div>
-              <div class="media text-muted pt-3">
-                <img alt="32x32" class="mr-2 rounded" style="width: 32px; height: 32px;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2232%22%20height%3D%2232%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1664406f760%20text%20%7B%20fill%3A%23007bff%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A2pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1664406f760%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20fill%3D%22%23007bff%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2211.828125%22%20y%3D%2217.0078125%22%3E32x32%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
-                  data-holder-rendered="true">
-                <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                  <strong class="d-block text-gray-dark">@username</strong>
-                  Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor
-                  mauris condimentum nibh, ut fermentum massa justo sit amet risus.
-                </p>
-              </div>
-            </div>
-
-            <div class="row pt-2 pr-3">
-              <div class="col">
-                <div class="dropdown pull-right">
-                  <a class="" href="#" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false">Actions</a>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                    <a class="dropdown-item" href="#">Run Tests</a>
-                    <a class="dropdown-item" href="#">Ask for introduction</a>
-                    <a class="dropdown-item disabled" href="#">Ask to put subsystem name in the title</a>
-                  </div>
-                </div>
-                <div class="pull-right"><a class="pr-3" data-toggle="collapse" href="#collapseExample2">Comments</a></div>
-              </div>
-            </div>
-
-          </div>
-        </div> -->
-      </div>
+    </div>
     </div><!-- /.list -->
 
   </main><!-- /.container -->
@@ -241,7 +185,7 @@
   <script>window.jQuery || document.write('<script src="static/js/vendor/jquery.min.js"><\/script>')</script>
   <script src="static/js/bootstrap.min.js"></script>
 
-  <script src="static/js/config.js"></script> 
+  <script src="static/js/config.js"></script>
   <script src="static/js/prs.js"></script>
 </body>
 

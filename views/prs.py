@@ -37,4 +37,12 @@ def get_prs_view(code):
     for pr in prs:
         pr['additional']['tag_collector'] = get_tag_collector_info(pr['number'], tag_collector_html)
 
+    # Chose correct background color based on test state
+    for pr in prs:
+        pr['additional']['background'] = 'bg-white'
+        if any(x for x in pr['labels'] if x['name'] == 'tests-pending'):
+            pr['additional']['background'] = 'bg-action-needed'
+        elif any(x for x in pr['labels'] if x['name'] == 'tests-approved') and pr['additional']['tag_collector']['tested']:
+            pr['additional']['background'] = 'bg-ready'
+
     return make_response(render_template('index.html', prs=prs, access_token=access_token))
