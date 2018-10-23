@@ -53,8 +53,17 @@
   </nav>
 
   <main role="main" class="container pt-4 pb-4">
-    <h4><a href="https://github.com/cms-sw/cmssw/pulls?utf8=✓&q=is%3Apr+is%3Aopen+label%3Adqm-pending" target="_blank"
-        class="no-color-link">Pending and rejected PRs <b>{{prs|length}}</b></a></h4>
+      <div class="row">
+        <div class="col">
+          <h4><a href="https://github.com/cms-sw/cmssw/pulls?utf8=✓&q=is%3Apr+is%3Aopen+label%3Adqm-pending" target="_blank"
+            class="no-color-link">Pending and rejected PRs <b>{{prs|length}}</b></a></h4>
+        </div>
+        <div class="col-auto">
+          <a href="https://github.com/cms-sw/cmssw/pulls?utf8=✓&q=is%3Apr+is%3Aopen+label%3Adqm-approved" target="_blank"
+            class="no-color-link">Signed but not merged PRs: <b>{{not_merged_prs_count}}</b></a>
+        </div>
+      </div>
+    
     {% if access_token == None or access_token == '' %}
     <div class="alert alert-primary mb-0" role="alert">
       You haven't authorized this app to use Github. Please <a href="https://github.com/login/oauth/authorize?client_id={{oauth_client_id}}&redirect_uri={{url_for(request.endpoint, _external=True)}}&scope=user%20public_repo"
@@ -99,7 +108,7 @@
 
             <div class="row pt-1 pr-3">
               <div class="col">
-                <div class="dropdown pull-right">
+                <div class="dropleft pull-right">
                   <a class="" href="#" id="dropdown-menu-button" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">Actions</a>
                   <div class="dropdown-menu" aria-labelledby="dropdown-menu-button">

@@ -11,6 +11,9 @@ def get_contacts_list_html():
 def get_tag_collector_html():
     cookies = __get_and_save_cookies(config.TWIKI_TAG_COLLECTOR_URL)
     text = requests.get(config.TWIKI_TAG_COLLECTOR_URL, cookies=cookies).text
+    
+    # Cancel editing so other people can access the edit page
+    requests.post(config.TWIKI_TAG_COLLECTOR_CANCEL_EDIT_URL, cookies=cookies, data = {'action_cancel': 'Cancel'})
 
     if 'action="https://twiki.cern.ch/Shibboleth.sso/ADFS"' in text and 'document.forms[0].submit()' in text:
         cookies = __get_and_save_cookies(config.TWIKI_TAG_COLLECTOR_URL, True)
@@ -19,7 +22,7 @@ def get_tag_collector_html():
     text = text.replace('&#42;', '*')
     text = text.replace('&#37;', '%')
     text = text.replace('&#91;', '[')
-
+    
     return text
 
 def get_author_mentioned_info(author, html):

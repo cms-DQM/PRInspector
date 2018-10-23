@@ -11,6 +11,7 @@ CERN_SSO_COOKIES_LOCATION = 'private/'
 
 TWIKI_CONTACTS_URL = 'https://threus.web.cern.ch/threus/ppd/ppd_contacts'
 TWIKI_TAG_COLLECTOR_URL = 'https://twiki.cern.ch/twiki/bin/edit/CMS/DQMP5TagCollector?nowysiwyg=1'
+TWIKI_TAG_COLLECTOR_CANCEL_EDIT_URL = 'https://twiki.cern.ch/twiki/bin/save/CMS/DQMP5TagCollector'
 
 __github_client_id = None
 __github_client_secret = None

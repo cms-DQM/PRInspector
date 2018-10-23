@@ -21,6 +21,12 @@ def exchange_code_to_token(code):
         print(e)
         return None
 
+def get_not_merged_prs_count(access_token=None):
+    url = __add_token('https://api.github.com/search/issues?q=repo:cms-sw/cmssw+is:pr+state:open+label:dqm-approved', access_token)
+    response = urllib.request.urlopen(url).read()
+    content = json.loads(response)
+    return content['total_count']
+
 def get_prs(access_token=None):
     url = __add_token('https://api.github.com/search/issues?q=repo:cms-sw/cmssw+is:pr+state:open+label:dqm-pending', access_token)
     response = urllib.request.urlopen(url).read()
