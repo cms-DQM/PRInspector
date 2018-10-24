@@ -172,6 +172,8 @@ window.onload = function(e)
 
 function setBlueBarIfVisited()
 {
+    var notification_count = 0
+
     pr_cards = document.querySelectorAll(".pr-card")
     pr_cards.forEach(function(card) 
     {
@@ -182,12 +184,15 @@ function setBlueBarIfVisited()
         if(updated_at > viewd_at)
         {
             card.classList.add("vertical-strip")
+            notification_count++
         }
         else
         {
             card.classList.remove("vertical-strip")
         }
     });
+
+    document.getElementById('notification-count').innerText = notification_count
 }
 
 $("[data-toggle=tooltip]").tooltip();
