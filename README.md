@@ -7,7 +7,7 @@ CMSSW DQM pull request review tool that aggregates and displays information abou
 Before running there should be a `private/` folder inside `src/` containing these files:
 * `private/cert.key` - GRID certificate key file
 * `private/cert.pem` - GRID certificate file
-* `private/github_oauth_data.txt` - Github OAuth credentials. Second line should contain client_id and third line should contain client_secret
+* `private/github_oauth_data.txt` - Github OAuth credentials. Second line should contain client_id and third line should contain client_secret. First line is just informational message that will be ignored.
 
 ## How to run
 
