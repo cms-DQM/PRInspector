@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from views.prs import get_prs_view
+from views.issues import get_issues_view
 from views.logout import github_logout
 from datetime import datetime
 import config
@@ -14,6 +15,11 @@ app = Flask(__name__,
 def index():
     code = request.args.get('code')
     return get_prs_view(code)
+
+@app.route('/issues')
+def issues():
+    code = request.args.get('code')
+    return get_issues_view(code)
 
 @app.route('/logout')
 def logout():

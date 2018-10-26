@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="static/favicon.ico">
+
+  <title>PR Inspector for CMS DQM</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="static/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="static/css/styles.css" rel="stylesheet">
+
+  <!-- Fontawesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">PR Inspector</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+      aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Pull Requests</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Issues <span class="sr-only">(current)</span></a>
+        </li>
+      </ul>
+      {% if access_token != None and access_token != '' %}
+        <a class="btn btn-outline-info" href="/logout">Log out</a>
+      {%endif%}
+    </div>
+  </nav>
+
+  <main role="main" class="container pt-4 pb-4">
+      <div class="row">
+        <div class="col">
+          <h4><a href="https://github.com/cms-sw/cmssw/issues?utf8=✓&q=is%3Aissue+is%3Aopen+label%3Adqm-pending" target="_blank"
+            class="no-color-link">Pending issues <b>{{issues|length}}</b></a> <small><sup class="bg-danger text-white rounded-circle pl-1 pr-1" id='notification-count'>0</sup></small></h4>
+        </div>
+      </div>
+    
+    {% if access_token == None or access_token == '' %}
+    <div class="alert alert-primary mb-0" role="alert">
+      You haven't authorized this app to use Github. Please <a href="https://github.com/login/oauth/authorize?client_id={{oauth_client_id}}&redirect_uri={{url_for(request.endpoint, _external=True)}}&scope=user%20public_repo"
+        class="alert-link">login</a> in order for this app to be able post comments on your behalf.
+    </div>
+    {%endif%}
+
+    <div class="list">
+
+      {% for issue in issues %}
+      <div class="row">
+        <div class="col">
+
+          <div class="pl-2 pt-2 pb-2 mt-3 rounded shadow-sm pr-card {{issue.additional.background}}" id="pr-card-{{issue.number}}"
+            data-pr-number="{{issue.number}}" data-updated-at="{{issue.updated_at}}">
+            <div class="lead"><a href="{{issue.html_url}}" target="_blank" class="no-color-link" data-toggle="tooltip"
+                data-placement="top" data-html="true" title="{{issue.body}}">{{issue.title}}</a>
+              <mark>#{{issue.number}}</mark></div>
+
+            <div class="row pt-1">
+              <div class="col-auto">Author: {{issue.user.login}}</div>
+              <div class="col-auto">Date: {{issue.created_at|datetime}}</div>
+              <div class="col-auto">{{issue.comments}} comments. Last: {{issue.updated_at|datetime}}</div>
+            </div>
+
+            <div class="row">
+              <div class="col">
+                {% for label in issue.labels %}
+                <span class="badge" style="background-color:#{{label.color}}">{{label.name}}</span>
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="row pt-1">
+              <div class="col">
+                <div class="pull-right"><a class="pr-3" data-toggle="collapse" href="#collapse-comments-{{issue.number}}"
+                    onclick="loadComments({{issue.number}}, '{{issue.comments_url}}');">Discussion</a></div>
+              </div>
+            </div>
+
+            <div class="collapse pt-2" id="collapse-comments-{{issue.number}}">
+
+              <div class="pt-3 border-top border-bottom">
+                <img class="rounded pull-left" style="width: 32px; height: 32px;" src="{{issue.user.avatar_url}}">
+                <div class="media-body small text-muted pl-5">
+                  <div class="row">
+                    <div class="col-auto"><strong class="text-gray-dark">{{issue.user.login}}</strong></div>
+                    <div class="col-auto">{{issue.created_at|datetime}}</div>
+                  </div>
+                  <div class="row word-break mr-2">
+                    <div class="col">
+                      <p>{{issue.body|safe}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-center text-info p-2 bg-light" id="comments-preloader-{{issue.number}}">Loading...</div>
+
+              <div id="comments-container-{{issue.number}}"></div>
+
+            </div>
+
+            <!-- Place buttons here if you want them to appear bellow the expand area -->
+
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+
+      <!-- Error Modal -->
+      <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="error-modal-label"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="error-modal-label">Error</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" id="error-modal-body">
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    </div><!-- /.list -->
+
+  </main><!-- /.container -->
+
+  <!-- Bootstrap core JavaScript
+    ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="static/js/popper.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="static/js/vendor/jquery.min.js"><\/script>')</script>
+  <script src="static/js/bootstrap.min.js"></script>
+
+  <script src="static/js/config.js"></script>
+  <script src="static/js/prs.js"></script>
+</body>
+
+</html>

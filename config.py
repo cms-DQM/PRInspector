@@ -56,5 +56,6 @@ def get_subsystems():
             'hfnose',
             'beamspot',
             'jme',
-            'jet'
+            'jet',
+            'eventdisplay'
             ]

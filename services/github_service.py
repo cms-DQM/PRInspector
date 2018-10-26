@@ -59,6 +59,17 @@ def get_last_comment(url, updated_at, access_token=None):
     else:
         return None
 
+def get_issues(access_token=None):
+    url = __add_token('https://api.github.com/search/issues?q=repo:cms-sw/cmssw+is:issue+state:open+label:dqm-pending', access_token)
+    response = urllib.request.urlopen(url).read()
+    content = json.loads(response)
+    issues = content['items']
+
+    for issue in issues:
+        issue['body'] = enrich_comment(issue['body'])
+    
+    return issues
+
 def __add_token(url, access_token):
     if access_token != None and access_token != '':
         return url + '&access_token=' + access_token
