@@ -19,7 +19,7 @@ async function loadComments(pr_number, comments_url)
         var page = await response.json()
         result = result.concat(page)
         pageIndex++
-    } while(page.length != undefined && page.length != 0)
+    } while(page != undefined && page.length != undefined && page.length != 0)
     
     var commentsCount = result.length
 
