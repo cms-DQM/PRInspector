@@ -38,7 +38,6 @@ async function loadComments(pr_number, comments_url)
         commentsPreloader.innerHTML = hiddenCommentsCount + " hidden comments (newest at the top)"
     else
         commentsPreloader.innerHTML = "No hidden comments (newest at the top)"
-        // commentsPreloader.style.display = "none"
 
     localStorage.setItem('viewd_at_' + pr_number, new Date().toISOString())
     setBlueBarIfVisited()
@@ -147,16 +146,18 @@ async function actionSign(url, access_token, author, pr_number)
 
 async function postFreeFormComment(url, access_token, pr_number)
 {
-    url = 'https://api.github.com/repos/andrius-k/PRInspector/issues/2/comments'
     var textarea = $("#comment-textarea-" + pr_number)
     var message = textarea.val()
-    
-    url = url + "?access_token=" + access_token
-    textarea.val("")
-    await postComment(url, message, pr_number)
 
-    
-    textarea.textareaAutoSize();
+    if(message.length != 0)
+    {
+        url = url + "?access_token=" + access_token
+
+        await postComment(url, message, pr_number)
+        
+        textarea.val("")
+        textarea.keyup();
+    }
 }
 
 async function postComment(url, comment, pr_number)
