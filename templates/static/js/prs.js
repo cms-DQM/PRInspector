@@ -145,6 +145,19 @@ async function actionSign(url, access_token, author, pr_number)
     await postComment(url, "+1", pr_number)
 }
 
+async function postFreeFormComment(url, access_token, pr_number)
+{
+    
+    // var textarea = $("#comment-textarea-" + pr_number)
+    // var message = textarea.val()
+    
+    // url = url + "?access_token=" + access_token
+    // await postComment(url, message, pr_number)
+
+    // textarea.val("")
+    // textarea.textareaAutoSize();
+}
+
 async function postComment(url, comment, pr_number)
 {
     $("#pr-card-" + pr_number).fadeTo("fast", 0.5)
@@ -168,6 +181,7 @@ async function postComment(url, comment, pr_number)
 window.onload = function(e)
 {
     setBlueBarIfVisited();
+    $('textarea').textareaAutoSize();
 }
 
 function setBlueBarIfVisited()

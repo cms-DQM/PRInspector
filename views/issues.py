@@ -1,5 +1,6 @@
 from flask import Flask, make_response, render_template, request, redirect
 from services.github_service import get_issues, exchange_code_to_token
+import config
 
 def get_issues_view(code):
     if code != None and code != '':
@@ -25,4 +26,5 @@ def get_issues_view(code):
 
     return make_response(render_template('issues.html', 
                                          issues=issues, 
-                                         access_token=access_token))
+                                         access_token=access_token,
+                                         oauth_client_id=config.get_github_client_id()))
