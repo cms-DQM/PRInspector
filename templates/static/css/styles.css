@@ -34,3 +34,9 @@ a.disabled {
 .bg-ready {
   background-color: #d7fae1;
 }
+
+.vbottom{
+  position: relative;
+  top: 100%;
+  transform: translateY(-100%); 
+}

@@ -182,6 +182,7 @@ async function postComment(url, comment, pr_number)
 window.onload = function(e)
 {
     setBlueBarIfVisited();
+    $('textarea').textareaAutoSize();
 }
 
 function setBlueBarIfVisited()
