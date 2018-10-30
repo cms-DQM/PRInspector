@@ -147,15 +147,16 @@ async function actionSign(url, access_token, author, pr_number)
 
 async function postFreeFormComment(url, access_token, pr_number)
 {
+    url = 'https://api.github.com/repos/andrius-k/PRInspector/issues/2/comments'
+    var textarea = $("#comment-textarea-" + pr_number)
+    var message = textarea.val()
     
-    // var textarea = $("#comment-textarea-" + pr_number)
-    // var message = textarea.val()
-    
-    // url = url + "?access_token=" + access_token
-    // await postComment(url, message, pr_number)
+    url = url + "?access_token=" + access_token
+    textarea.val("")
+    await postComment(url, message, pr_number)
 
-    // textarea.val("")
-    // textarea.textareaAutoSize();
+    
+    textarea.textareaAutoSize();
 }
 
 async function postComment(url, comment, pr_number)
