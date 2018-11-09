@@ -74,7 +74,7 @@
         <div class="col">
 
           <div class="pl-2 pt-2 pb-2 mt-3 rounded shadow-sm pr-card {{issue.additional.background}}" id="pr-card-{{issue.number}}"
-            data-pr-number="{{issue.number}}" data-updated-at="{{issue.updated_at}}">
+            data-pr-number="{{issue.number}}" data-updated-at="{{issue.updated_at}}" ondblclick="toggleBlueBar({{issue.number}})">
             <div class="lead"><a href="{{issue.html_url}}" target="_blank" class="no-color-link" data-toggle="tooltip"
                 data-placement="top" data-html="true" title="{{issue.body}}">{{issue.title}}</a>
               <mark>#{{issue.number}}</mark></div>

@@ -10,7 +10,6 @@ def exchange_code_to_token(code):
         return None
     
     try:
-        print(config.get_github_client_secret())
         data = {'client_id': config.get_github_client_id(), 'client_secret': config.get_github_client_secret(), 'code': code}
         req = urllib.request.Request('https://github.com/login/oauth/access_token', urllib.parse.urlencode(data).encode('utf-8'))
         req.add_header('Accept', 'application/json')

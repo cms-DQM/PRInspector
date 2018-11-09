@@ -78,7 +78,7 @@
         <div class="col">
 
           <div class="pl-2 pt-2 pb-2 mt-3 rounded shadow-sm pr-card {{pr.additional.background}}" id="pr-card-{{pr.number}}"
-            data-pr-number="{{pr.number}}" data-updated-at="{{pr.updated_at}}">
+            data-pr-number="{{pr.number}}" data-updated-at="{{pr.updated_at}}" ondblclick="toggleBlueBar({{pr.number}})">
             <div class="lead"><a href="{{pr.html_url}}" target="_blank" class="no-color-link" data-toggle="tooltip"
                 data-placement="top" data-html="true" title="{{pr.body}}">{{pr.additional.subsystem.enriched_title|safe}}</a>
               <mark>#{{pr.number}}</mark></div>

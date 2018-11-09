@@ -57,5 +57,6 @@ def get_subsystems():
             'beamspot',
             'jme',
             'jet',
-            'eventdisplay'
+            'eventdisplay',
+            'castor'
             ]

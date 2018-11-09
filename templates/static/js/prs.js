@@ -179,11 +179,27 @@ async function postComment(url, comment, pr_number)
     return response
 }
 
+function toggleBlueBar(pr_number)
+{
+    card = $("#pr-card-" + pr_number)
+
+    if(card.hasClass("vertical-strip"))
+    {
+        localStorage.setItem('viewd_at_' + pr_number, new Date().toISOString())
+    }
+    else
+    {
+        localStorage.setItem('viewd_at_' + pr_number, new Date(1970, 1).toISOString())
+    }
+    
+    setBlueBarIfVisited()
+}
+
 // Set blue bar if visited initially
 window.onload = function(e)
 {
     setBlueBarIfVisited();
-    $('textarea').textareaAutoSize();
+    $('textarea').textareaAutoSize()
 }
 
 function setBlueBarIfVisited()

@@ -37,7 +37,6 @@ def get_author_mentioned_info(author, html):
         return { 'text': 'Author is unknown', 'class': 'text-danger', 'description': "Author's Github username doesn't appear in DQM Contacts Twiki page" }
 
 def get_tag_collector_info(pr_number, html):
-    print(html)
     regex_ok = r'%OK%([^%\n]*?)\]\[PR ' + str(pr_number) + r'\]\]'
     m_ok = re.compile(regex_ok)
 
