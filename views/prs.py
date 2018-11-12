@@ -45,6 +45,8 @@ def get_prs_view(code):
             pr['additional']['background'] = 'bg-action-needed'
         elif any(x for x in pr['labels'] if x['name'] == 'tests-approved') and pr['additional']['tag_collector']['tested']:
             pr['additional']['background'] = 'bg-ready'
+        elif any(x for x in pr['labels'] if x['name'] == 'hold'):
+            pr['additional']['background'] = 'bg-hold'
 
     return make_response(render_template('index.html', 
                                          prs=prs, 

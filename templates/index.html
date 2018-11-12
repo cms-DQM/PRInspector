@@ -47,23 +47,24 @@
         </li>
       </ul>
       {% if access_token != None and access_token != '' %}
-        <a class="btn btn-outline-info" href="/logout">Log out</a>
+      <a class="btn btn-outline-info" href="/logout">Log out</a>
       {%endif%}
     </div>
   </nav>
 
   <main role="main" class="container pt-4 pb-4">
-      <div class="row">
-        <div class="col">
-          <h4><a href="https://github.com/cms-sw/cmssw/pulls?utf8=✓&q=is%3Apr+is%3Aopen+label%3Adqm-pending" target="_blank"
-            class="no-color-link">Pending and rejected PRs <b>{{prs|length}}</b></a> <small><sup class="bg-danger text-white rounded-circle pl-1 pr-1" id='notification-count'>0</sup></small></h4>
-        </div>
-        <div class="col-auto">
-          <a href="https://github.com/cms-sw/cmssw/pulls?utf8=✓&q=is%3Apr+is%3Aopen+label%3Adqm-approved" target="_blank"
-            class="no-color-link">Signed but not merged PRs: <b>{{not_merged_prs_count}}</b></a>
-        </div>
+    <div class="row">
+      <div class="col">
+        <h4><a href="https://github.com/cms-sw/cmssw/pulls?utf8=✓&q=is%3Apr+is%3Aopen+label%3Adqm-pending" target="_blank"
+            class="no-color-link">Pending and rejected PRs <b>{{prs|length}}</b></a> <small><sup class="bg-danger text-white rounded-circle pl-1 pr-1"
+              id='notification-count'>0</sup></small></h4>
       </div>
-    
+      <div class="col-auto">
+        <a href="https://github.com/cms-sw/cmssw/pulls?utf8=✓&q=is%3Apr+is%3Aopen+label%3Adqm-approved" target="_blank"
+          class="no-color-link">Signed but not merged PRs: <b>{{not_merged_prs_count}}</b></a>
+      </div>
+    </div>
+
     {% if access_token == None or access_token == '' %}
     <div class="alert alert-primary mb-0" role="alert">
       You haven't authorized this app to use Github. Please <a href="https://github.com/login/oauth/authorize?client_id={{oauth_client_id}}&redirect_uri={{url_for(request.endpoint, _external=True)}}&scope=user%20public_repo"
@@ -78,59 +79,66 @@
         <div class="col">
 
           <div class="pl-2 pt-2 pb-2 mt-3 rounded shadow-sm pr-card {{pr.additional.background}}" id="pr-card-{{pr.number}}"
-            data-pr-number="{{pr.number}}" data-updated-at="{{pr.updated_at}}" ondblclick="toggleBlueBar({{pr.number}})">
-            <div class="lead"><a href="{{pr.html_url}}" target="_blank" class="no-color-link" data-toggle="tooltip"
-                data-placement="top" data-html="true" title="{{pr.body}}">{{pr.additional.subsystem.enriched_title|safe}}</a>
-              <mark>#{{pr.number}}</mark></div>
+            data-pr-number="{{pr.number}}" data-updated-at="{{pr.updated_at}}">
 
-            <div class="row pt-1">
-              <div class="col-auto">Author: {{pr.user.login}}</div>
-              <div class="col-auto">Date: {{pr.created_at|datetime}}</div>
-              <div class="col-auto">{{pr.comments}} comments. Last: {{pr.updated_at|datetime}}</div>
-            </div>
+            <div ondblclick="toggleBlueBar({{pr.number}})">
 
-            <div class="row">
-              <div class="col">
-                {% for label in pr.labels %}
-                <span class="badge" style="background-color:#{{label.color}}">{{label.name}}</span>
-                {% endfor %}
+              <div class="lead"><a href="{{pr.html_url}}" target="_blank" class="no-color-link" data-toggle="tooltip"
+                  data-placement="top" data-html="true" title="{{pr.body}}">{{pr.additional.subsystem.enriched_title|safe}}</a>
+                <mark>#{{pr.number}}</mark>
               </div>
-            </div>
 
-            <div class="row pt-1">
-              <div class="col-auto {{pr.additional.tag_collector.class}}" data-toggle="tooltip" data-placement="bottom"
-                title="{{pr.additional.tag_collector.description}}">{{pr.additional.tag_collector.text}}</div>
-              <!-- <div class="col-auto text-info">Probably Online</div> -->
-              <div class="col-auto {{pr.additional.subsystem.class}}" data-toggle="tooltip" data-placement="bottom"
-                title="{{pr.additional.subsystem.description}}">{{pr.additional.subsystem.text}}</div>
-              <div class="col-auto {{pr.additional.author.class}}" data-toggle="tooltip" data-placement="bottom" title="{{pr.additional.author.description}}">{{pr.additional.author.text}}</div>
-            </div>
+              <div class="row pt-1">
+                <div class="col-auto">Author: {{pr.user.login}}</div>
+                <div class="col-auto">Date: {{pr.created_at|datetime}}</div>
+                <div class="col-auto">{{pr.comments}} comments. Last: {{pr.updated_at|datetime}}</div>
+              </div>
 
-            <div class="row pt-1 pr-3">
-              <div class="col">
-                <div class="dropleft pull-right">
-                  <a class="" href="#" id="dropdown-menu-button" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false">Actions</a>
-                  <div class="dropdown-menu" aria-labelledby="dropdown-menu-button">
-                    <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled text-muted{%endif%}"
-                      onclick="actionRunTests('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">Run
-                      Tests</a>
-                    <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled text-muted{%endif%}"
-                      onclick="actionAskForIntroduction('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">Ask
-                      for introduction</a>
-                    <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled text-muted{%endif%}"
-                      onclick="actionAskForSubsystemName('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">Ask
-                      to put subsystem name in the title</a>
-                    <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled text-muted{%endif%}"
-                      onclick="actionReject('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">-1</a>
-                    <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled text-muted{%endif%}"
-                      onclick="actionSign('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">+1</a>
-                  </div>
+              <div class="row">
+                <div class="col">
+                  {% for label in pr.labels %}
+                  <span class="badge" style="background-color:#{{label.color}}">{{label.name}}</span>
+                  {% endfor %}
                 </div>
-                <div class="pull-right"><a class="pr-3" target="_blank" href="{{pr.html_url}}/files">Code</a></div>
-                <div class="pull-right"><a class="pr-3" data-toggle="collapse" href="#collapse-comments-{{pr.number}}"
-                    onclick="loadComments({{pr.number}}, '{{pr.comments_url}}');">Discussion</a></div>
               </div>
+
+              <div class="row pt-1">
+                <div class="col-auto {{pr.additional.tag_collector.class}}" data-toggle="tooltip" data-placement="bottom"
+                  title="{{pr.additional.tag_collector.description}}">{{pr.additional.tag_collector.text}}</div>
+                <!-- <div class="col-auto text-info">Probably Online</div> -->
+                <div class="col-auto {{pr.additional.subsystem.class}}" data-toggle="tooltip" data-placement="bottom"
+                  title="{{pr.additional.subsystem.description}}">{{pr.additional.subsystem.text}}</div>
+                <div class="col-auto {{pr.additional.author.class}}" data-toggle="tooltip" data-placement="bottom"
+                  title="{{pr.additional.author.description}}">{{pr.additional.author.text}}</div>
+              </div>
+
+              <div class="row pt-1 pr-3">
+                <div class="col">
+                  <div class="dropleft pull-right">
+                    <a class="" href="#" id="dropdown-menu-button" data-toggle="dropdown" aria-haspopup="true"
+                      aria-expanded="false">Actions</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown-menu-button">
+                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled text-muted{%endif%}"
+                        onclick="actionRunTests('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">Run
+                        Tests</a>
+                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled text-muted{%endif%}"
+                        onclick="actionAskForIntroduction('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">Ask
+                        for introduction</a>
+                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled text-muted{%endif%}"
+                        onclick="actionAskForSubsystemName('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">Ask
+                        to put subsystem name in the title</a>
+                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled text-muted{%endif%}"
+                        onclick="actionReject('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">-1</a>
+                      <a class="dropdown-item {% if access_token == None or access_token == '' %}disabled text-muted{%endif%}"
+                        onclick="actionSign('{{pr.comments_url}}', '{{access_token}}', '{{pr.user.login}}', '{{pr.number}}');">+1</a>
+                    </div>
+                  </div>
+                  <div class="pull-right"><a class="pr-3" target="_blank" href="{{pr.html_url}}/files">Code</a></div>
+                  <div class="pull-right"><a class="pr-3" data-toggle="collapse" href="#collapse-comments-{{pr.number}}"
+                      onclick="loadComments({{pr.number}}, '{{pr.comments_url}}');">Discussion</a></div>
+                </div>
+              </div>
+
             </div>
 
             <div class="collapse pt-2" id="collapse-comments-{{pr.number}}">
@@ -139,7 +147,7 @@
                 <img class="rounded pull-left" style="width: 32px; height: 32px;" src="{{pr.user.avatar_url}}">
                 <div class="media-body small text-muted pl-5">
                   <div class="row">
-                    <div class="col-auto"><strong class="text-gray-dark">{{pr.user.login}}</strong></div>
+                    <div class="col-auto" ondblclick="insertToClipboard('@{{pr.user.login}}')"><strong class="text-gray-dark">{{pr.user.login}}</strong></div>
                     <div class="col-auto">{{pr.created_at|datetime}}</div>
                   </div>
                   <div class="row word-break mr-2">
@@ -195,7 +203,6 @@
         </div>
       </div>
 
-    </div>
     </div><!-- /.list -->
 
   </main><!-- /.container -->

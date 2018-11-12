@@ -74,30 +74,35 @@
         <div class="col">
 
           <div class="pl-2 pt-2 pb-2 mt-3 rounded shadow-sm pr-card {{issue.additional.background}}" id="pr-card-{{issue.number}}"
-            data-pr-number="{{issue.number}}" data-updated-at="{{issue.updated_at}}" ondblclick="toggleBlueBar({{issue.number}})">
-            <div class="lead"><a href="{{issue.html_url}}" target="_blank" class="no-color-link" data-toggle="tooltip"
-                data-placement="top" data-html="true" title="{{issue.body}}">{{issue.title}}</a>
-              <mark>#{{issue.number}}</mark></div>
+            data-pr-number="{{issue.number}}" data-updated-at="{{issue.updated_at}}">
 
-            <div class="row pt-1">
-              <div class="col-auto">Author: {{issue.user.login}}</div>
-              <div class="col-auto">Date: {{issue.created_at|datetime}}</div>
-              <div class="col-auto">{{issue.comments}} comments. Last: {{issue.updated_at|datetime}}</div>
-            </div>
+            <div ondblclick="toggleBlueBar({{issue.number}})">
+            
+              <div class="lead"><a href="{{issue.html_url}}" target="_blank" class="no-color-link" data-toggle="tooltip"
+                  data-placement="top" data-html="true" title="{{issue.body}}">{{issue.title}}</a>
+                <mark>#{{issue.number}}</mark></div>
 
-            <div class="row">
-              <div class="col">
-                {% for label in issue.labels %}
-                <span class="badge" style="background-color:#{{label.color}}">{{label.name}}</span>
-                {% endfor %}
+              <div class="row pt-1">
+                <div class="col-auto">Author: {{issue.user.login}}</div>
+                <div class="col-auto">Date: {{issue.created_at|datetime}}</div>
+                <div class="col-auto">{{issue.comments}} comments. Last: {{issue.updated_at|datetime}}</div>
               </div>
-            </div>
 
-            <div class="row pt-1">
-              <div class="col">
-                <div class="pull-right"><a class="pr-3" data-toggle="collapse" href="#collapse-comments-{{issue.number}}"
-                    onclick="loadComments({{issue.number}}, '{{issue.comments_url}}');">Discussion</a></div>
+              <div class="row">
+                <div class="col">
+                  {% for label in issue.labels %}
+                  <span class="badge" style="background-color:#{{label.color}}">{{label.name}}</span>
+                  {% endfor %}
+                </div>
               </div>
+
+              <div class="row pt-1">
+                <div class="col">
+                  <div class="pull-right"><a class="pr-3" data-toggle="collapse" href="#collapse-comments-{{issue.number}}"
+                      onclick="loadComments({{issue.number}}, '{{issue.comments_url}}');">Discussion</a></div>
+                </div>
+              </div>
+
             </div>
 
             <div class="collapse pt-2" id="collapse-comments-{{issue.number}}">
@@ -106,7 +111,7 @@
                 <img class="rounded pull-left" style="width: 32px; height: 32px;" src="{{issue.user.avatar_url}}">
                 <div class="media-body small text-muted pl-5">
                   <div class="row">
-                    <div class="col-auto"><strong class="text-gray-dark">{{issue.user.login}}</strong></div>
+                    <div class="col-auto" ondblclick="insertToClipboard('@{{issue.user.login}}')"><strong class="text-gray-dark">{{issue.user.login}}</strong></div>
                     <div class="col-auto">{{issue.created_at|datetime}}</div>
                   </div>
                   <div class="row word-break mr-2">
@@ -161,8 +166,7 @@
           </div>
         </div>
       </div>
-
-    </div>
+      
     </div><!-- /.list -->
 
   </main><!-- /.container -->

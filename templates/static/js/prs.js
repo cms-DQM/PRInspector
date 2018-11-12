@@ -77,7 +77,7 @@ function createCommentsList(comments)
             <img class="rounded pull-left" style="width: 32px; height: 32px;" src="` + comment.user.avatar_url + `">
             <div class="media-body small text-muted pl-5">
                 <div class="row">
-                    <div class="col-auto"><strong class="text-gray-dark">` + comment.user.login + `</strong></div>
+                    <div class="col-auto" ondblclick="insertToClipboard('@` + comment.user.login + `')"><strong class="text-gray-dark">` + comment.user.login + `</strong></div>
                     <div class="col-auto">` + date + `</div>
                     <div class="col text-right2"><a href="` + comment.html_url + `" target="_blank" class="no-color-link">View on Github</a></div>
                 </div>
@@ -193,6 +193,17 @@ function toggleBlueBar(pr_number)
     }
     
     setBlueBarIfVisited()
+}
+
+function insertToClipboard(content)
+{
+    var tempInput = document.createElement("input");
+    tempInput.style = "position: absolute; left: -1000px; top: -1000px";
+    tempInput.value = content;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempInput);
 }
 
 // Set blue bar if visited initially

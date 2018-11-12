@@ -35,6 +35,10 @@ a.disabled {
   background-color: #d7fae1;
 }
 
+.bg-hold {
+  background-color: #ffe6f4;
+}
+
 .vbottom{
   position: relative;
   top: 100%;
