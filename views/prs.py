@@ -24,20 +24,24 @@ def get_prs_view(code):
     for pr in prs:
         pr['additional'] = {}
 
+    # Define errors that will be displayd in frontend
+    errors = []
+    
     # Check if subsystem was mentioned in the title
     for pr in prs:
         pr['additional']['subsystem'] = get_subsystem_in_title_info(pr['title'])
-
+    
     # Check if author is in contacts list
-    contacts_html = get_contacts_list_html()
+    contacts_html = get_contacts_list_html(errors)
     for pr in prs:
         pr['additional']['author'] = get_author_mentioned_info(pr['user']['login'], contacts_html)
-
+    
     # Check if pr is tested in tag collector
-    tag_collector_html = get_tag_collector_html()
+    tag_collector_html = get_tag_collector_html(errors)
+    
     for pr in prs:
         pr['additional']['tag_collector'] = get_tag_collector_info(pr['number'], tag_collector_html)
-
+    
     # Chose correct background color based on test state
     for pr in prs:
         pr['additional']['background'] = 'bg-white'
@@ -52,4 +56,5 @@ def get_prs_view(code):
                                          prs=prs, 
                                          access_token=access_token, 
                                          oauth_client_id=config.get_github_client_id(),
-                                         not_merged_prs_count=get_not_merged_prs_count(access_token)))
+                                         not_merged_prs_count=get_not_merged_prs_count(access_token),
+                                         errors = errors))

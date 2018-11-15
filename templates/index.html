@@ -70,7 +70,13 @@
       You haven't authorized this app to use Github. Please <a href="https://github.com/login/oauth/authorize?client_id={{oauth_client_id}}&redirect_uri={{url_for(request.endpoint, _external=True)}}&scope=user%20public_repo"
         class="alert-link">login</a> in order for this app to be able post comments on your behalf.
     </div>
-    {%endif%}
+    {% endif %}
+
+    {% for error in errors %}
+    <div class="alert alert-danger mb-0 mt-2" role="alert">
+      {{error|safe}}
+    </div>
+    {% endfor %}
 
     <div class="list">
 

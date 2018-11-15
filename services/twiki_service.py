@@ -5,21 +5,24 @@ import pickle
 import config
 import re
 
-def get_contacts_list_html():
-    return requests.get(config.TWIKI_CONTACTS_URL).text
+def get_contacts_list_html(errors=[]):
+    return __get_with_timeout(config.TWIKI_CONTACTS_URL, errors)
 
-def get_tag_collector_html():
+def get_tag_collector_html(errors=[]):
     cookies = __get_and_save_cookies(config.TWIKI_TAG_COLLECTOR_URL)
-    text = requests.get(config.TWIKI_TAG_COLLECTOR_URL, cookies=cookies).text
+    text = __get_with_timeout(config.TWIKI_TAG_COLLECTOR_URL, errors=errors, cookies=cookies)
 
-    # Cancel editing so other people can access the edit page
-    requests.post(config.TWIKI_TAG_COLLECTOR_CANCEL_EDIT_URL, cookies=cookies, data = {'action_cancel': 'Cancel'})
+    try:
+        # Cancel editing so other people can access the edit page
+        requests.post(config.TWIKI_TAG_COLLECTOR_CANCEL_EDIT_URL, cookies=cookies, data = {'action_cancel': 'Cancel'})
+    except requests.exceptions.RequestException:
+        errors.append('Error canceling tag collector edit by posting <a href="%s" target="_blank" class="alert-link">here</a>'%(config.TWIKI_TAG_COLLECTOR_CANCEL_EDIT_URL))
 
     if ('action="https://twiki.cern.ch/Shibboleth.sso/ADFS"' in text or 
         'document.forms[0].submit()' in text or 
         'Sign in with your CERN account' in text):
         cookies = __get_and_save_cookies(config.TWIKI_TAG_COLLECTOR_URL, True)
-        text = requests.get(config.TWIKI_TAG_COLLECTOR_URL, cookies=cookies).text
+        text = __get_with_timeout(config.TWIKI_TAG_COLLECTOR_URL, errors=errors, cookies=cookies)
 
     text = text.replace('&#42;', '*')
     text = text.replace('&#37;', '%')
@@ -76,3 +79,13 @@ def __get_and_save_cookies(url, force_reload=False):
     
     return cookies
 
+def __get_with_timeout(url, errors=[], cookies=None):
+    try:
+        return requests.get(url, cookies=cookies, timeout=config.TWIKI_TIMEOUT_SECONDS).text
+    except requests.exceptions.Timeout:
+        errors.append('<a href="%s" target="_blank" class="alert-link">%s</a> load timeouted after %s seconds. Content related to data from mentioned page is presented incorrectly.'%(url, url, config.TWIKI_TIMEOUT_SECONDS))
+        return ''
+    except requests.exceptions.RequestException as e:
+        errors.append('Error loading <a href="%s" target="_blank" class="alert-link">%s</a>. Content related to data from mentioned page is presented incorrectly.'%(url, url))
+        print(e)
+        return ''
