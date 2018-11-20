@@ -39,6 +39,10 @@ a.disabled {
   background-color: #ffe6f4;
 }
 
+.bg-merged {
+  background-color: #c4b9fd;
+}
+
 .vbottom{
   position: relative;
   top: 100%;

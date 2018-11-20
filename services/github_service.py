@@ -43,6 +43,17 @@ def get_prs(access_token=None):
     
     return prs
 
+def get_merged_prs(access_token=None):
+    url = __add_token('https://api.github.com/search/issues?q=repo:cms-sw/cmssw+is:pr+is:merged+label:dqm-pending+created:>2018-06-01', access_token)
+    response = urllib.request.urlopen(url).read()
+    content = json.loads(response)
+    merged_pending = content['items']
+
+    for pr in merged_pending:
+        pr['body'] = enrich_comment(pr['body'])
+    
+    return merged_pending
+
 def get_last_comment(url, updated_at, access_token=None):
     since = datetime.datetime.strptime(updated_at, "%Y-%m-%dT%H:%M:%SZ")
     since -= datetime.timedelta(minutes=30)
