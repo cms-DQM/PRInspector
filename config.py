@@ -60,5 +60,6 @@ def get_subsystems():
             'jme',
             'jet',
             'eventdisplay',
-            'castor'
+            'castor',
+            'validation',
             ]
