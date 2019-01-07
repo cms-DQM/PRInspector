@@ -68,7 +68,7 @@ function createCommentsList(comments)
         body = body.replace(/\n/ig, "<br>")
 
         // Replace code tags
-        var regex = /`(.*?)`/ig
+        var regex = /`(.*?)`/igs
         body = body.replace(regex, "<code>$1</code>")
 
         // Bold usernames
