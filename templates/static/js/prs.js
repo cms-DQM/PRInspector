@@ -1,9 +1,9 @@
 
 async function loadComments(pr_number, comments_url, access_token)
 {
-    // If colapse is open, button was clicked to close it. No need to load comments.
-    var colapse = document.getElementById("collapse-comments-" + pr_number)
-    if(colapse.classList.contains("show"))
+    // If collapse is open, button was clicked to close it. No need to load comments.
+    var collapse = document.getElementById("collapse-comments-" + pr_number)
+    if(collapse.classList.contains("show"))
         return;
     
     var commentsPreloader = document.getElementById("comments-preloader-" + pr_number)
@@ -42,7 +42,7 @@ async function loadComments(pr_number, comments_url, access_token)
     else
         commentsPreloader.innerHTML = "No hidden comments (newest at the top)"
 
-    localStorage.setItem('viewd_at_' + pr_number, new Date().toISOString())
+    localStorage.setItem('viewed_at_' + pr_number, new Date().toISOString())
     setBlueBarIfVisited()
 }
 
@@ -188,11 +188,11 @@ function toggleBlueBar(pr_number)
 
     if(card.hasClass("vertical-strip"))
     {
-        localStorage.setItem('viewd_at_' + pr_number, new Date().toISOString())
+        localStorage.setItem('viewed_at_' + pr_number, new Date().toISOString())
     }
     else
     {
-        localStorage.setItem('viewd_at_' + pr_number, new Date(1970, 1).toISOString())
+        localStorage.setItem('viewed_at_' + pr_number, new Date(1970, 1).toISOString())
     }
     
     setBlueBarIfVisited()
@@ -225,9 +225,9 @@ function setBlueBarIfVisited()
     {
         var pr_number = card.dataset.prNumber
         var updated_at = new Date(card.dataset.updatedAt);
-        var viewd_at = new Date(localStorage.getItem('viewd_at_' + pr_number));
+        var viewed_at = new Date(localStorage.getItem('viewed_at_' + pr_number));
         
-        if(updated_at > viewd_at)
+        if(updated_at > viewed_at)
         {
             card.classList.add("vertical-strip")
             notification_count++
