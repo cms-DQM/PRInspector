@@ -99,7 +99,7 @@
               <div class="row pt-1">
                 <div class="col">
                   <div class="pull-right"><a class="pr-3" data-toggle="collapse" href="#collapse-comments-{{issue.number}}"
-                      onclick="loadComments({{issue.number}}, '{{issue.comments_url}}');">Discussion</a></div>
+                      onclick="loadComments({{issue.number}}, '{{issue.comments_url}}', '{{access_token if access_token else ""}}');">Discussion</a></div>
                 </div>
               </div>
 

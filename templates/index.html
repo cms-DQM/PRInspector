@@ -141,7 +141,7 @@
                   </div>
                   <div class="pull-right"><a class="pr-3" target="_blank" href="{{pr.html_url}}/files">Code</a></div>
                   <div class="pull-right"><a class="pr-3" data-toggle="collapse" href="#collapse-comments-{{pr.number}}"
-                      onclick="loadComments({{pr.number}}, '{{pr.comments_url}}');">Discussion</a></div>
+                      onclick="loadComments({{pr.number}}, '{{pr.comments_url}}', '{{access_token if access_token else ""}}');">Discussion</a></div>
                 </div>
               </div>
 

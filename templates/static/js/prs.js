@@ -1,5 +1,5 @@
 
-async function loadComments(pr_number, comments_url)
+async function loadComments(pr_number, comments_url, access_token)
 {
     // If colapse is open, button was clicked to close it. No need to load comments.
     var colapse = document.getElementById("collapse-comments-" + pr_number)
@@ -9,13 +9,16 @@ async function loadComments(pr_number, comments_url)
     var commentsPreloader = document.getElementById("comments-preloader-" + pr_number)
     commentsPreloader.innerHTML = "Loading..."
 
+    if(access_token == null)
+        access_token = ""
+
     var result = []
     var page = []
     var pageIndex = 1
     
     do
     {
-        var response = await fetch(comments_url + "?page=" + pageIndex)
+        var response = await fetch(comments_url + "?page=" + pageIndex + "&access_token=" + access_token)
         var page = await response.json()
         result = result.concat(page)
         pageIndex++
