@@ -1,5 +1,6 @@
 .DS_Store
 *.py[cod]
 *$py.class
+*.pyc
 __pycache__/
 private/*
