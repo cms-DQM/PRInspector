@@ -46,12 +46,12 @@
           <a class="nav-link" href="/issues">Issues</a>
         </li>
       </ul>
-      <button type="button" class="btn btn-outline-info" data-html="true" data-container="body" data-toggle="popover" data-placement="bottom" title="Modules DQM is responsible for" data-content="
+      <button type="button" class="btn btn-outline-info" data-html="true" data-container="body" data-toggle="popover" data-placement="bottom" title="Packages DQM is responsible for" data-content="
       {% for category in dqm_categories:%}
         {{category|safe}}<br>
       {% endfor %}
       ">
-        DQM modules
+        DQM packages
       </button>
       {% if access_token != None and access_token != '' %}
       <a class="btn btn-outline-info ml-2" href="/logout">Log out</a>
