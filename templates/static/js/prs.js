@@ -4,7 +4,7 @@ async function loadComments(pr_number, comments_url, access_token)
     // If collapse is open, button was clicked to close it. No need to load comments.
     var collapse = document.getElementById("collapse-comments-" + pr_number)
     if(collapse.classList.contains("show"))
-        return;
+        return
     
     var commentsPreloader = document.getElementById("comments-preloader-" + pr_number)
     commentsPreloader.innerHTML = "Loading..."
@@ -91,7 +91,7 @@ function createCommentsList(comments)
         </div>`
     });
 
-    return result;
+    return result
 }
 
 function formatDate(date) 
@@ -106,8 +106,8 @@ function formatDate(date)
       minute = date.getMinutes().toString(),
       formatedMinute = (minute.length === 1) ? ("0" + minute) : minute,
       second = date.getSeconds().toString(),
-      formatedSecond = (second.length === 1) ? ("0" + second) : second;
-    return year + "-" + formatedMonth + "-" + formatedDay + " " + formatedHour + ':' + formatedMinute + ':' + formatedSecond;
+      formatedSecond = (second.length === 1) ? ("0" + second) : second
+    return year + "-" + formatedMonth + "-" + formatedDay + " " + formatedHour + ':' + formatedMinute + ':' + formatedSecond
 }
 
 function showError(message)
@@ -159,7 +159,7 @@ async function postFreeFormComment(url, access_token, pr_number)
         await postComment(url, message, pr_number)
         
         textarea.val("")
-        textarea.keyup();
+        textarea.keyup()
     }
 }
 
@@ -200,19 +200,19 @@ function toggleBlueBar(pr_number)
 
 function insertToClipboard(content)
 {
-    var tempInput = document.createElement("input");
-    tempInput.style = "position: absolute; left: -1000px; top: -1000px";
-    tempInput.value = content;
-    document.body.appendChild(tempInput);
-    tempInput.select();
-    document.execCommand("copy");
-    document.body.removeChild(tempInput);
+    var tempInput = document.createElement("input")
+    tempInput.style = "position: absolute; left: -1000px; top: -1000px"
+    tempInput.value = content
+    document.body.appendChild(tempInput)
+    tempInput.select()
+    document.execCommand("copy")
+    document.body.removeChild(tempInput)
 }
 
 // Set blue bar if visited initially
 window.onload = function(e)
 {
-    setBlueBarIfVisited();
+    setBlueBarIfVisited()
     $('textarea').textareaAutoSize()
 }
 
@@ -224,8 +224,8 @@ function setBlueBarIfVisited()
     pr_cards.forEach(function(card) 
     {
         var pr_number = card.dataset.prNumber
-        var updated_at = new Date(card.dataset.updatedAt);
-        var viewed_at = new Date(localStorage.getItem('viewed_at_' + pr_number));
+        var updated_at = new Date(card.dataset.updatedAt)
+        var viewed_at = new Date(localStorage.getItem('viewed_at_' + pr_number))
         
         if(updated_at > viewed_at)
         {
@@ -236,9 +236,9 @@ function setBlueBarIfVisited()
         {
             card.classList.remove("vertical-strip")
         }
-    });
+    })
 
     document.getElementById('notification-count').innerText = notification_count
 }
 
-$("[data-toggle=tooltip]").tooltip();
+$("[data-toggle=tooltip]").tooltip()
