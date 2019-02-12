@@ -13,6 +13,8 @@ TWIKI_CONTACTS_URL = 'https://ppdcontacts.web.cern.ch/PPDContacts/ppd_contacts'
 TWIKI_TAG_COLLECTOR_URL = 'https://twiki.cern.ch/twiki/bin/edit/CMS/DQMP5TagCollector?nowysiwyg=1'
 TWIKI_TAG_COLLECTOR_CANCEL_EDIT_URL = 'https://twiki.cern.ch/twiki/bin/save/CMS/DQMP5TagCollector'
 
+CATEGORIES_MAP_URL = 'https://raw.githubusercontent.com/cms-sw/cms-bot/master/categories_map.py'
+
 TWIKI_TIMEOUT_SECONDS = 10
 
 __github_client_id = None

@@ -53,13 +53,13 @@
   </nav>
 
   <main role="main" class="container pt-4 pb-4">
-      <div class="row">
-        <div class="col">
-          <h4><a href="https://github.com/cms-sw/cmssw/issues?utf8=✓&q=is%3Aissue+is%3Aopen+label%3Adqm-pending" target="_blank"
-            class="no-color-link">Pending issues <b>{{issues|length}}</b></a> <small><sup class="bg-danger text-white rounded-circle pl-1 pr-1" id='notification-count'>0</sup></small></h4>
-        </div>
+    <div class="row">
+      <div class="col">
+        <h4><a href="https://github.com/cms-sw/cmssw/issues?utf8=✓&q=is%3Aissue+is%3Aopen+label%3Adqm-pending" target="_blank"
+          class="no-color-link">Pending issues <b>{{issues|length}}</b></a> <small><sup class="bg-danger text-white rounded-circle pl-1 pr-1" id='notification-count'>0</sup></small></h4>
       </div>
-    
+    </div>
+
     {% if access_token == None or access_token == '' %}
     <div class="alert alert-primary mb-0" role="alert">
       You haven't authorized this app to use Github. Please <a href="https://github.com/login/oauth/authorize?client_id={{oauth_client_id}}&redirect_uri={{url_for(request.endpoint, _external=True)}}&scope=user%20public_repo"

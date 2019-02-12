@@ -80,6 +80,28 @@ def get_issues(access_token=None):
     
     return issues
 
+def get_dqm_categories():
+    response = urllib.request.urlopen(config.CATEGORIES_MAP_URL).read()
+    
+    result = {}
+    exec(response.decode("utf-8"), {}, result)
+    
+    categories = result['CMSSW_CATEGORIES']['dqm']
+
+    categories = [item for item in categories if item.startswith('DQM/') == False]
+    categories.append('DQM/*')
+
+    categories = [item for item in categories if item.startswith('DQMOffline/') == False]
+    categories.append('DQMOffline/*')
+
+    categories = [item for item in categories if item.startswith('DQMServices/') == False]
+    categories.append('DQMServices/*')
+
+    categories = [item for item in categories if item.startswith('Validation/') == False]
+    categories.append('Validation/*')
+
+    return categories
+
 def __add_token(url, access_token):
     if access_token != None and access_token != '':
         return url + '&access_token=' + access_token

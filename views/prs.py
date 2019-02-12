@@ -1,5 +1,5 @@
 from flask import Flask, make_response, render_template, request, redirect
-from services.github_service import get_prs, get_merged_prs, get_last_comment, exchange_code_to_token, get_not_merged_prs_count
+from services.github_service import get_prs, get_merged_prs, get_last_comment, exchange_code_to_token, get_not_merged_prs_count, get_dqm_categories
 from services.pr_info_service import get_subsystem_in_title_info
 from services.twiki_service import get_contacts_list_html, get_tag_collector_html, get_author_mentioned_info, get_tag_collector_info
 import config
@@ -53,6 +53,9 @@ def get_prs_view(code):
     for pr in prs:
         pr['additional']['tag_collector'] = get_tag_collector_info(pr['number'], tag_collector_html)
     
+    dqm_categories=get_dqm_categories()
+    print(dqm_categories)
+
     # Chose correct background color based on test state
     for pr in prs:
         pr['additional']['background'] = 'bg-white'
@@ -70,4 +73,5 @@ def get_prs_view(code):
                                          access_token=access_token, 
                                          oauth_client_id=config.get_github_client_id(),
                                          not_merged_prs_count=get_not_merged_prs_count(access_token),
+                                         dqm_categories=get_dqm_categories(),
                                          errors = errors))
