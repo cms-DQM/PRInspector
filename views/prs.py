@@ -52,9 +52,6 @@ def get_prs_view(code):
     
     for pr in prs:
         pr['additional']['tag_collector'] = get_tag_collector_info(pr['number'], tag_collector_html)
-    
-    dqm_categories=get_dqm_categories()
-    print(dqm_categories)
 
     # Chose correct background color based on test state
     for pr in prs:
