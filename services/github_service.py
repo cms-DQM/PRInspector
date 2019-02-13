@@ -4,6 +4,7 @@ import datetime
 import urllib.request
 import urllib.parse
 import json
+import re
 
 def exchange_code_to_token(code):
     if code == None or code == '':
@@ -82,12 +83,17 @@ def get_issues(access_token=None):
 
 def get_dqm_categories():
     response = urllib.request.urlopen(config.CATEGORIES_MAP_URL).read()
-    
-    result = {}
-    exec(response.decode("utf-8"), {}, result)
-    
-    categories = result['CMSSW_CATEGORIES']['dqm']
+    response = response.decode('utf-8')
 
+    begin_index = response.find('"dqm": [') + 8
+    end_index = response.find('],', begin_index)
+    
+    result = response[begin_index + 1:end_index]
+    
+    categories = result.split(',')
+    categories = [item.strip('\n').strip(' ').strip('"') for item in categories]
+    categories = filter(None, categories)
+    
     categories = [item for item in categories if item.startswith('DQM/') == False]
     categories.append('DQM/*')
 
