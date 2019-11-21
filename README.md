@@ -14,3 +14,12 @@ Before running there should be a `private/` folder inside `src/` containing thes
 Run this by executing `run.sh`. 
 
 `-r` option will reload the web app if it crashes each time any file is updated and saved. `fswatch` is used to observe file changes. `-d` will run the web app in debug mode. **Both options should be used only in development.**
+
+## Package instalation
+
+Packages listed in `requirements.txt` have to be installed like this:
+
+```
+python3 -m pip install Flask -t .python_packages/
+python3 -m pip install requests -t .python_packages/
+```
