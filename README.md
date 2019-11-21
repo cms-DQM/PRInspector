@@ -19,7 +19,7 @@ Run this by executing `run.sh`.
 
 Packages listed in `requirements.txt` have to be installed like this:
 
-```
+``` bash
 python3 -m pip install Flask -t .python_packages/
 python3 -m pip install requests -t .python_packages/
 ```
