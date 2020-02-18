@@ -48,7 +48,8 @@ def get_prs_view(code):
         pr['additional']['author'] = get_author_mentioned_info(pr['user']['login'], contacts_html)
     
     # Check if pr is tested in tag collector
-    tag_collector_html = get_tag_collector_html(errors)
+    # tag_collector_html = get_tag_collector_html(errors)
+    tag_collector_html = ''
     
     for pr in prs:
         pr['additional']['tag_collector'] = get_tag_collector_info(pr['number'], tag_collector_html)
