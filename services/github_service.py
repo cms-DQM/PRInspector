@@ -22,19 +22,22 @@ def exchange_code_to_token(code):
         return None
 
 def get_not_merged_prs_count(access_token=None):
-    url = __add_token('https://api.github.com/search/issues?q=repo:cms-sw/cmssw+is:pr+state:open+label:dqm-approved', access_token)
-    response = urllib.request.urlopen(url).read()
+    req = urllib.request.Request('https://api.github.com/search/issues?q=repo:cms-sw/cmssw+is:pr+state:open+label:dqm-approved')
+    __add_token(req, access_token)
+    response = urllib.request.urlopen(req).read()
     content = json.loads(response)
     return content['total_count']
 
 def get_prs(access_token=None):
-    url = __add_token('https://api.github.com/search/issues?q=repo:cms-sw/cmssw+is:pr+state:open+label:dqm-pending', access_token)
-    response = urllib.request.urlopen(url).read()
+    req = urllib.request.Request('https://api.github.com/search/issues?q=repo:cms-sw/cmssw+is:pr+state:open+label:dqm-pending')
+    __add_token(req, access_token)
+    response = urllib.request.urlopen(req).read()
     content = json.loads(response)
     pending = content['items']
     
-    url = __add_token('https://api.github.com/search/issues?q=repo:cms-sw/cmssw+is:pr+state:open+label:dqm-rejected', access_token)
-    response = urllib.request.urlopen(url).read()
+    req = urllib.request.Request('https://api.github.com/search/issues?q=repo:cms-sw/cmssw+is:pr+state:open+label:dqm-rejected')
+    __add_token(req, access_token)
+    response = urllib.request.urlopen(req).read()
     content = json.loads(response)
     rejected = content['items']
 
@@ -45,8 +48,9 @@ def get_prs(access_token=None):
     return prs
 
 def get_merged_prs(access_token=None):
-    url = __add_token('https://api.github.com/search/issues?q=repo:cms-sw/cmssw+is:pr+is:merged+label:dqm-pending+created:>2018-06-01', access_token)
-    response = urllib.request.urlopen(url).read()
+    req = urllib.request.Request('https://api.github.com/search/issues?q=repo:cms-sw/cmssw+is:pr+is:merged+label:dqm-pending+created:>2018-06-01')
+    __add_token(req, access_token)
+    response = urllib.request.urlopen(req).read()
     content = json.loads(response)
     merged_pending = content['items']
 
@@ -60,8 +64,9 @@ def get_last_comment(url, updated_at, access_token=None):
     since -= datetime.timedelta(minutes=30)
     since = since.strftime("%Y-%m-%dT%H:%M:%SZ")
     
-    url = __add_token(url + '?since=' + since, access_token)
-    response = urllib.request.urlopen(url).read()
+    req = urllib.request.Request(url + '?since=' + since)
+    __add_token(req, access_token)
+    response = urllib.request.urlopen(req).read()
 
     content = json.loads(response)
     
@@ -71,8 +76,9 @@ def get_last_comment(url, updated_at, access_token=None):
         return None
 
 def get_issues(access_token=None):
-    url = __add_token('https://api.github.com/search/issues?q=repo:cms-sw/cmssw+is:issue+state:open+label:dqm-pending', access_token)
-    response = urllib.request.urlopen(url).read()
+    req = urllib.request.Request('https://api.github.com/search/issues?q=repo:cms-sw/cmssw+is:issue+state:open+label:dqm-pending')
+    __add_token(req, access_token)
+    response = urllib.request.urlopen(req).read()
     content = json.loads(response)
     issues = content['items']
 
@@ -108,8 +114,6 @@ def get_dqm_categories():
 
     return categories
 
-def __add_token(url, access_token):
+def __add_token(req, access_token):
     if access_token != None and access_token != '':
-        return url + '&access_token=' + access_token
-    else:
-        return url
+        req.add_header('Authorization', 'token %s' % access_token)

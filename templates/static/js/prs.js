@@ -18,7 +18,14 @@ async function loadComments(pr_number, comments_url, access_token)
     
     do
     {
-        var response = await fetch(comments_url + "?page=" + pageIndex + "&access_token=" + access_token)
+        var response = await fetch(comments_url + "?page=" + pageIndex, {
+            method: 'GET',
+            headers: {
+                'Authorization': `token ${access_token}`
+            },
+            cache: 'no-store'
+        })
+
         var page = await response.json()
         result = result.concat(page)
         pageIndex++
@@ -119,32 +126,27 @@ function showError(message)
 // Action handlers
 async function actionRunTests(url, access_token, author, pr_number)
 {
-    url = url + "?access_token=" + access_token
-    await postComment(url, "please test", pr_number)
+    await postComment(url, "please test", pr_number, access_token)
 }
 
 async function actionAskForIntroduction(url, access_token, author, pr_number)
 {
-    url = url + "?access_token=" + access_token
-    await postComment(url, "Hi @" + author + ", I can't seem to find you in [DQM contacts list](https://twiki.cern.ch/twiki/bin/viewauth/CMS/DQMContacts). Could you please briefly introduce yourself?", pr_number)
+    await postComment(url, "Hi @" + author + ", I can't seem to find you in [DQM contacts list](https://twiki.cern.ch/twiki/bin/viewauth/CMS/DQMContacts). Could you please briefly introduce yourself?", pr_number, access_token)
 }
 
 async function actionAskForSubsystemName(url, access_token, author, pr_number)
 {
-    url = url + "?access_token=" + access_token
-    await postComment(url, "Hi @" + author + ", could you please make sure that subsystem name appears in the title of the PR?", pr_number)
+    await postComment(url, "Hi @" + author + ", could you please make sure that subsystem name appears in the title of the PR?", pr_number, access_token)
 }
 
 async function actionReject(url, access_token, author, pr_number)
 {
-    url = url + "?access_token=" + access_token
-    await postComment(url, "-1", pr_number)
+    await postComment(url, "-1", pr_number, access_token)
 }
 
 async function actionSign(url, access_token, author, pr_number)
 {
-    url = url + "?access_token=" + access_token
-    await postComment(url, "+1", pr_number)
+    await postComment(url, "+1", pr_number, access_token)
 }
 
 async function postFreeFormComment(url, access_token, pr_number)
@@ -154,21 +156,22 @@ async function postFreeFormComment(url, access_token, pr_number)
 
     if(message.length != 0)
     {
-        url = url + "?access_token=" + access_token
-
-        await postComment(url, message, pr_number)
+        await postComment(url, message, pr_number, access_token)
         
         textarea.val("")
         textarea.keyup()
     }
 }
 
-async function postComment(url, comment, pr_number)
+async function postComment(url, comment, pr_number, access_token)
 {
     $("#pr-card-" + pr_number).fadeTo("fast", 0.5)
     
     var response = await fetch(url, {
         method: 'POST',
+        headers: {
+            'Authorization': `token ${access_token}`
+        },
         body: JSON.stringify({body: comment}),
     })
 
