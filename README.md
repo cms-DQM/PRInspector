@@ -22,3 +22,19 @@ Packages listed in `requirements.txt` have to be installed like this:
 ``` bash
 python3 -m pip install -r requirements.txt -t .python_packages
 ```
+
+## Where is this service hosted?
+
+The service is hosted on an OpenStack machine called `prinspector`. To get to this machine you have to execute this from `lxplus`: `ssh prinspector`.
+
+Source code for the service is located here: `/srv/PRInspector/`.
+
+## How to update
+
+When the code in this repository changes and you want the changes to be reflected in a running service, execute the following instructions:
+
+```bash
+ssh prinspector
+cd /srv/PRInspector/
+./update.sh
+```
