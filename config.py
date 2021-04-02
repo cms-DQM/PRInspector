@@ -9,7 +9,7 @@ CERN_SSO_CERT_FILE = 'private/cert.pem'
 CERN_SSO_KEY_FILE = 'private/cert.key'
 CERN_SSO_COOKIES_LOCATION = 'private/'
 
-TWIKI_CONTACTS_URL = 'https://ppdcontacts.web.cern.ch/PPDContacts/ppd_contacts'
+TWIKI_CONTACTS_URL = 'https://ppdcontacts.web.cern.ch/PPDContacts/ppd_contacts.txt'
 TWIKI_TAG_COLLECTOR_URL = 'https://twiki.cern.ch/twiki/bin/edit/CMS/DQMP5TagCollector?nowysiwyg=1'
 TWIKI_TAG_COLLECTOR_CANCEL_EDIT_URL = 'https://twiki.cern.ch/twiki/bin/save/CMS/DQMP5TagCollector'
 
