@@ -38,3 +38,5 @@ ssh prinspector
 cd /srv/PRInspector/
 ./update.sh
 ```
+
+If the update has some unwanted behaviour, you can rollback to the latest working version like so: `./rollback.sh`
