@@ -123,7 +123,7 @@ def __get_and_save_cookies(url, force_reload=False):
         except:
             pass
 
-    if cookies == None:
+    if cookies is None:
         cookies = cert_sign_on(
             url,
             cert_file=config.CERN_SSO_CERT_FILE,

@@ -38,7 +38,7 @@ __github_client_secret = None
 
 def get_github_client_id():
     global __github_client_id
-    if __github_client_id == None:
+    if __github_client_id is None:
         __github_client_id = (
             open("private/github_oauth_data.txt", "r").readlines()[1].strip()
         )
@@ -47,7 +47,7 @@ def get_github_client_id():
 
 def get_github_client_secret():
     global __github_client_secret
-    if __github_client_secret == None:
+    if __github_client_secret is None:
         __github_client_secret = (
             open("private/github_oauth_data.txt", "r").readlines()[2].strip()
         )
