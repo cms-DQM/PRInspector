@@ -1,6 +1,7 @@
 import urllib.request
 import json
 
+
 def paginate(url, items_count=0, page_param="?page="):
     response = []
     page = 1
@@ -14,8 +15,8 @@ def paginate(url, items_count=0, page_param="?page="):
 
         page += 1
         response += content
-    
+
     if items_count > 0:
         return response[:-items_count]
-    
+
     return response

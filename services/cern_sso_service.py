@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 
 DEFAULT_TIMEOUT_SECONDS = 10
 
+
 def _init_session(s, url, cookiejar, auth_url_fragment):
     """
     Internal helper function: initialise the sesion by trying to access
@@ -27,8 +28,8 @@ def _init_session(s, url, cookiejar, auth_url_fragment):
 
     # ...and inject them into the Kerberos authentication URL
     final_auth_url = "{auth_url}?{parameters}".format(
-        auth_url=urljoin(r1.url, auth_url_fragment),
-        parameters=redirect_url.query)
+        auth_url=urljoin(r1.url, auth_url_fragment), parameters=redirect_url.query
+    )
 
     return final_auth_url
 
@@ -52,12 +53,12 @@ def _finalise_login(s, auth_results):
         # log.error("The contents returned was:\n{}".format(r2.content))
         raise e
 
-    action = tree.findall("body/form")[0].get('action')
+    action = tree.findall("body/form")[0].get("action")
 
     # Unpack the hidden form data fields
-    form_data = dict((
-        (elm.get('name'), elm.get('value'))
-        for elm in tree.findall("body/form/input")))
+    form_data = dict(
+        ((elm.get("name"), elm.get("value")) for elm in tree.findall("body/form/input"))
+    )
 
     # ...and submit the form (WHY IS THIS STEP EVEN HERE!?)
     # log.debug("Performing final authentication POST to %s" % action)
@@ -70,6 +71,7 @@ def _finalise_login(s, auth_results):
     # log.debug("Cookie jar now contains: %s" % str(s.cookies))
 
     return s.cookies
+
 
 def cert_sign_on(url, cert_file, key_file, cookiejar={}):
     """
@@ -94,13 +96,18 @@ def cert_sign_on(url, cert_file, key_file, cookiejar={}):
         # connection is opened!)
         s.cert = (cert_file, key_file)
 
-        cert_auth_url = _init_session(s=s, url=url, cookiejar=cookiejar,
-                                      auth_url_fragment=u"auth/sslclient/")
+        cert_auth_url = _init_session(
+            s=s, url=url, cookiejar=cookiejar, auth_url_fragment="auth/sslclient/"
+        )
 
         # log.info("Performing SSL Cert authentication against %s"
-                #  % cert_auth_url)
+        #  % cert_auth_url)
 
-        r2 = s.get(cert_auth_url, cookies=cookiejar, verify=False,
-                   timeout=DEFAULT_TIMEOUT_SECONDS)
+        r2 = s.get(
+            cert_auth_url,
+            cookies=cookiejar,
+            verify=False,
+            timeout=DEFAULT_TIMEOUT_SECONDS,
+        )
 
         return _finalise_login(s, auth_results=r2)
