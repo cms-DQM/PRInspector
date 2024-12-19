@@ -1,0 +1,7 @@
+private/
+__pycache__
+.git
+.gitignore
+.env*
+.vscode/
+deployment/
