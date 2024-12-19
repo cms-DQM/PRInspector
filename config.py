@@ -1,15 +1,20 @@
+import os
+from pathlib import Path
+
 IS_TEST = True
 
-REPOSITORY = "cms-sw/cmssw"
+CMSSW_REPOSITORY = os.environ.get("CMSSW_REPOSITORY", "cms-sw/cmssw")
 
 
 def get_repo_url():
-    return "https://github.com/" + REPOSITORY + "/"
+    return "https://github.com/" + CMSSW_REPOSITORY + "/"
 
 
 CERN_SSO_CERT_FILE = "private/cert.pem"
 CERN_SSO_KEY_FILE = "private/cert.key"
-CERN_SSO_COOKIES_LOCATION = "private/"
+CERN_SSO_COOKIES_LOCATION = Path(
+    os.environ.get("CERN_SSO_COOKIES_LOCATION", Path("/tmp"))
+)
 
 TWIKI_CONTACTS_URL = "https://ppdcontacts.web.cern.ch/PPDContacts/ppd_contacts.txt"
 TWIKI_TAG_COLLECTOR_URL = (
@@ -19,11 +24,13 @@ TWIKI_TAG_COLLECTOR_CANCEL_EDIT_URL = (
     "https://twiki.cern.ch/twiki/bin/save/CMS/DQMP5TagCollector"
 )
 
-CATEGORIES_MAP_URL = (
-    "https://raw.githubusercontent.com/cms-sw/cms-bot/master/categories_map.py"
+CATEGORIES_MAP_URL = os.environ.get(
+    "CATEGORIES_MAP_URL",
+    "https://raw.githubusercontent.com/cms-sw/cms-bot/master/categories_map.py",
 )
 
-TWIKI_TIMEOUT_SECONDS = 10
+
+TWIKI_TIMEOUT_SECONDS = int(os.environ.get("TWIKI_TIMEOUT_SECONDS", 10))
 
 __github_client_id = None
 __github_client_secret = None
@@ -31,7 +38,7 @@ __github_client_secret = None
 
 def get_github_client_id():
     global __github_client_id
-    if __github_client_id == None:
+    if __github_client_id is None:
         __github_client_id = (
             open("private/github_oauth_data.txt", "r").readlines()[1].strip()
         )
@@ -40,7 +47,7 @@ def get_github_client_id():
 
 def get_github_client_secret():
     global __github_client_secret
-    if __github_client_secret == None:
+    if __github_client_secret is None:
         __github_client_secret = (
             open("private/github_oauth_data.txt", "r").readlines()[2].strip()
         )

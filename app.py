@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, request
 from views.prs import get_prs_view
 from views.issues import get_issues_view
 from views.logout import github_logout

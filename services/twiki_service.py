@@ -113,7 +113,7 @@ def get_tag_collector_info(pr_number, html):
 
 def __get_and_save_cookies(url, force_reload=False):
     hash = hashlib.md5(url.encode()).hexdigest()
-    file = config.CERN_SSO_COOKIES_LOCATION + hash + "_cookies.p"
+    file = config.CERN_SSO_COOKIES_LOCATION.joinpath(f"{hash}_cookies.p")
 
     cookies = None
 
@@ -123,7 +123,7 @@ def __get_and_save_cookies(url, force_reload=False):
         except:
             pass
 
-    if cookies == None:
+    if cookies is None:
         cookies = cert_sign_on(
             url,
             cert_file=config.CERN_SSO_CERT_FILE,

@@ -1,5 +1,4 @@
 import config
-import re
 
 
 def get_subsystem_in_title_info(title):

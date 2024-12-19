@@ -1,0 +1,62 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: prinspector-app
+  namespace: prinspector
+  labels:
+    app: prinspector-app
+    app.kubernetes.io/component: prinspector-app
+    app.kubernetes.io/instance: prinspector-app
+    app.kubernetes.io/name: prinspector-app
+    app.kubernetes.io/part-of: prinspector
+    app.openshift.io/runtime-namespace: prinspector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prinspector-app
+  template:
+    metadata:
+      labels:
+        app: prinspector-app
+        deployment: prinspector-app
+    spec:
+      volumes:
+        - name: secret-volume
+          secret:
+            secretName: grid-cert-and-github-secret
+      containers:
+        - name: prinspector-app
+          resources:
+            requests:
+              memory: 512Mi
+            limits:
+              memory: 2Gi
+          command:
+            - "gunicorn"
+            - "-w"
+            - "4"
+            - "-b"
+            - "0.0.0.0:8080"
+            - "app:app"
+          envFrom:
+            - secretRef:
+                name: config-secrets
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: secret-volume
+              readOnly: true
+              mountPath: "/app/private/"
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/prinspector/prinspector:latest
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

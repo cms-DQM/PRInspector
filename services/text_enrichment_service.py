@@ -3,7 +3,7 @@ import re
 
 
 def enrich_comment(body):
-    if body == None or body == "":
+    if body is None or body == "":
         return "<em>No description provided.</em>"
 
     body = add_links_to_pr_numbers(body)
