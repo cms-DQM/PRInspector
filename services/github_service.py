@@ -4,11 +4,10 @@ import datetime
 import urllib.request
 import urllib.parse
 import json
-import re
 
 
 def exchange_code_to_token(code):
-    if code == None or code == "":
+    if code is None or code == "":
         return None
 
     try:
@@ -146,5 +145,5 @@ def get_dqm_categories():
 
 
 def __add_token(req, access_token):
-    if access_token != None and access_token != "":
+    if access_token is not None and access_token != "":
         req.add_header("Authorization", "token %s" % access_token)
