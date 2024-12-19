@@ -4,7 +4,7 @@ CMSSW DQM pull request review tool that aggregates and displays information abou
 
 ## Before running
 
-Before running there should be a `private/` folder inside `src/` containing these files:
+Before running there should be a `private/` folder inside the root directory of the repository containing these files:
 
 - `private/cert.key` - GRID certificate key file
 - `private/cert.pem` - GRID certificate file
