@@ -1,5 +1,8 @@
 # A tool to review PRs in CMSSW DQM
 
+> [!WARNING]
+> This project has moved [here](https://gitlab.cern.ch/cms-dqmdc/services/PRInspector)
+
 CMSSW DQM pull request review tool that aggregates and displays information about pull requests from Github, TagCollector and other sources.
 
 ## Before running
